@@ -544,7 +544,7 @@ const rangCat = (c) => { const i = ORDRE_CATS.indexOf(c); return i < 0 ? 98 : i;
 const estInter = (c) => c.startsWith('International');
 const pays = (c) => c.split('·')[1]?.trim() || 'Autres pays';
 const catsVues = new Set(); // catégories déjà montrées une fois (au départ : aucune, donc tout arrive coché)
-// n = comptes de la catégorie ; reste = blocages encore à faire sur les réseaux cochés (« ✓ » quand tout est fait).
+// n = comptes de la catégorie ; reste = ceux pas encore bloqués partout sur les réseaux cochés (« tout bloqué » quand c'est fini).
 function pastille(valeur, libelle, n, coche, reste) {
   const l = document.createElement('label');
   const c = Object.assign(document.createElement('input'), { type: 'checkbox', value: valeur, checked: coche });
@@ -556,16 +556,16 @@ function pastille(valeur, libelle, n, coche, reste) {
   r.className = 'reste' + (reste ? '' : ' fini');
   r.textContent = reste ? `· ${reste.toLocaleString('fr-FR')} à bloquer` : '· tout bloqué';
   l.append(s, r);
-  l.title = `${n} comptes dans l'annuaire · ${reste ? `${reste} blocages encore à faire` : 'tout est bloqué'} sur les réseaux cochés`;
+  l.title = `${n} comptes dans cette catégorie · ${reste ? `${reste} pas encore bloqués` : 'tous bloqués'} sur les réseaux cochés`;
   return l;
 }
-// Blocages encore à faire, par catégorie, sur les réseaux cochés (ou tous si aucun n'est coché).
+// Comptes encore à bloquer, par catégorie : une personne compte pour 1 tant qu'elle n'est pas bloquée sur tous les réseaux cochés
+// (ou tous les réseaux si aucun n'est coché). Correctif : on comptait les blocages (1 par réseau), d'où « 276 · 512 à bloquer ».
 function restesParCategorie() {
   const ids = reseauxCoches().length ? reseauxCoches() : ORDRE;
   const reste = {};
   for (const p of liste.personnes) {
-    const n = ids.filter((id) => p.comptes[id] && !deja(id, p.comptes[id])).length;
-    reste[p.categorie] = (reste[p.categorie] || 0) + n;
+    if (ids.some((id) => p.comptes[id] && !deja(id, p.comptes[id]))) reste[p.categorie] = (reste[p.categorie] || 0) + 1;
   }
   return reste;
 }

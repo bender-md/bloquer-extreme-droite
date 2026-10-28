@@ -38,7 +38,7 @@ Une carte par réseau (X, TikTok, Instagram, Facebook) :
   journalistes et chroniqueurs, influenceurs, etc. Les comptes ajoutés à l’annuaire récemment, pas encore rangés, sont dans
   « Nouveaux ajouts (à classer) ».
 - **International** : la case « International » coche ou décoche tous les pays ; « Voir par pays » les affiche un par un.
-- **Chaque pastille** indique le nombre de comptes et, après « · », les **blocages encore à faire** sur les réseaux cochés (« tout bloqué » quand c’est fini).
+- **Chaque pastille** indique le nombre de comptes et, après « · », les **comptes pas encore bloqués** sur les réseaux cochés (une personne compte pour 1, même sur plusieurs réseaux) (« tout bloqué » quand c’est fini).
 - **Une pastille colorée = incluse.** Touche-la pour l’exclure. « Tout » et « Aucune » cochent ou décochent tout.
 - **Consulter la liste** ouvre une fenêtre avec tous les comptes : filtre par catégorie, recherche par nom ou @,
   et pour chaque personne ses réseaux (un ✓ vert = déjà bloqué). Un clic sur un réseau ouvre le profil.

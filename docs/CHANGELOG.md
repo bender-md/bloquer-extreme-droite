@@ -1,5 +1,10 @@
 # Historique des versions
 
+## 2.16
+
+- **« à bloquer » plus clair** : chaque catégorie compte maintenant les comptes pas encore bloqués (une personne = 1, même présente sur
+  plusieurs réseaux). Le chiffre ne dépasse donc plus jamais le nombre de comptes de la catégorie.
+
 ## 2.15
 
 - **Comptes à rebours en anneau** : pendant les pauses, un cercle se vide avec les secondes au centre (grand dans la carte, petit par réseau).
