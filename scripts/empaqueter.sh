@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Produit dist/bloquer-extreme-droite.zip avec les fichiers de l'extension (racine du dépôt, sans la doc) (nom fixe : le lien « dernière version » du README ne change jamais).
 # Zip reproductible : fichiers triés, date fixe (1980-01-01 00:00), droits neutres, aucun champ propriétaire/utilisateur.
-# Le zip contient un dossier « bloquer-extreme-droite/ » : c'est lui qu'on choisit dans « Charger l'extension non empaquetée ».
+# Le zip contient directement les fichiers : décompressé, il donne le dossier à choisir dans « Charger l'extension non empaquetée ».
 # Usage : scripts/empaqueter.sh   (depuis n'importe où)
 set -euo pipefail
 RACINE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -26,7 +26,9 @@ for dossier, sous, noms in os.walk(ext):
         fichiers.append(os.path.relpath(os.path.join(dossier, n), ext).replace(os.sep, '/'))
 with zipfile.ZipFile(sortie, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
     for rel in sorted(fichiers):
-        info = zipfile.ZipInfo(f'{nom}/{rel}', date_time=(1980, 1, 1, 0, 0, 0))
+        # Fichiers à la racine du zip (pas de dossier dedans) : décompressé, il donne directement le bon dossier,
+        # sur Mac comme sur Windows (plus de « dossier dans le dossier »).
+        info = zipfile.ZipInfo(rel, date_time=(1980, 1, 1, 0, 0, 0))
         info.compress_type = zipfile.ZIP_DEFLATED
         info.create_system = 3                      # Unix
         info.external_attr = (0o100644 & 0xFFFF) << 16  # -rw-r--r--

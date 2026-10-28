@@ -75,20 +75,20 @@ Un fichier `.zip` arrive dans ton dossier **Téléchargements**.
 | **⬇️ Télécharger l’extension** (le lien ci-dessus, conseillé) | `bloquer-extreme-droite.zip` : seulement l’extension | `bloquer-extreme-droite` |
 | Le bouton vert **« Code » → « Download ZIP »** (en haut de la page) | `bloquer-extreme-droite-main.zip` : l’extension + les explications du projet | `bloquer-extreme-droite-main` |
 
-Dans les deux cas, le dossier à choisir est **celui qui contient le fichier `manifest.json`** (voir l’étape 2).
+Dans les deux cas, le dossier à choisir est **celui qui contient le fichier « C’EST LE BON DOSSIER - choisis celui-ci dans Chrome »** (voir l’étape 2).
 
 ### Étape 2 : décompresser et trouver le bon dossier
 
 1. **Décompresse le fichier .zip** :
    - **Mac** : double-clique dessus.
    - **Windows** : clic droit dessus → **« Extraire tout… »** → **« Extraire »**.
-2. **Trouve le bon dossier.** Ouvre le dossier qui vient d’apparaître (il s’appelle `bloquer-extreme-droite`
-   ou `bloquer-extreme-droite-main`, selon le bouton utilisé) :
-   - ✅ Tu vois des fichiers comme **`manifest.json`**, `panneau.html`, `annuaire.js` et un dossier `icones` ? **C’est le bon dossier.**
-   - ↪️ Tu vois **un seul dossier** à l’intérieur ? (Windows le fait souvent.) **Entre dedans** : c’est lui, le bon dossier.
+2. **Vérifie que c’est le bon dossier.** Ouvre le dossier qui vient d’apparaître :
+   - ✅ Tu vois un fichier qui s’appelle **« C’EST LE BON DOSSIER - choisis celui-ci dans Chrome »** (avec `manifest.json`,
+     `panneau.html`…) ? **C’est le bon.**
+   - ↪️ Tu ne vois qu’**un seul dossier** à l’intérieur ? (ça arrive avec le bouton vert « Code », surtout sur Windows)
+     **Entre dedans** : c’est lui qui contient le fichier « C’EST LE BON DOSSIER ».
 
-   **La règle : le bon dossier est celui qui contient directement le fichier `manifest.json`.**
-   Si Chrome affiche « Fichier manifeste absent ou illisible », c’est que tu as choisi le dossier au-dessus.
+   Si Chrome affiche « Fichier manifeste absent ou illisible », c’est que tu as choisi le dossier au-dessus du bon.
 3. **Range ce dossier** dans un endroit où il restera, par exemple dans **Documents**.
    ⚠️ **Ne le supprime pas** après l’installation : Chrome en a besoin. Si tu le supprimes, l’extension disparaît.
 
@@ -109,7 +109,7 @@ Opera `opera://extensions` · Vivaldi `vivaldi://extensions`.
 
 1. **Active le « Mode développeur »** : l’interrupteur en haut à droite.
 2. **Clique sur « Charger l’extension non empaquetée »** (en anglais : *Load unpacked*), qui vient d’apparaître en haut à gauche.
-   Choisis **le bon dossier de l’étape 2** (celui qui contient `manifest.json`), puis clique sur **« Sélectionner »**.
+   Choisis **le bon dossier de l’étape 2** (celui qui contient le fichier « C’EST LE BON DOSSIER »), puis clique sur **« Sélectionner »**.
 3. **L’extension apparaît** dans la liste : « On bloque l’extrême droite. Automatiquement ». C’est installé !
 
 ### Étape 5 : épingler l’icône
@@ -193,7 +193,7 @@ Suis les instructions du réseau (souvent un code par e-mail ou SMS), puis atten
 
 **Chrome affiche « Échec du chargement de l’extension · Fichier manifeste absent ou illisible ».**
 Tu as choisi le mauvais dossier : celui au-dessus du bon. Ouvre-le : à l’intérieur, il y a un autre dossier. Recommence
-« Charger l’extension non empaquetée » en choisissant ce dossier intérieur (celui qui contient `manifest.json`).
+« Charger l’extension non empaquetée » en choisissant ce dossier intérieur (celui qui contient le fichier « C’EST LE BON DOSSIER »).
 
 **Le panneau dit « Pas connecté » alors que je le suis.**
 Tu dois être connecté **dans ce même Chrome** (et pas en navigation privée). Clique sur « Se connecter », connecte-toi,

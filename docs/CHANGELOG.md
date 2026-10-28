@@ -1,5 +1,11 @@
 # Historique des versions
 
+## 2.14
+
+- **Installation plus simple** : le fichier téléchargé donne directement le bon dossier (plus de dossier dans le dossier),
+  et ce dossier contient un fichier « C’EST LE BON DOSSIER - choisis celui-ci dans Chrome ».
+- En-tête du panneau : « @unfachoko (crédits) » ne se coupe plus en fin de ligne.
+
 ## 2.13
 
 - **Partager** : le message renvoie vers l’extension (cette page GitHub) et vers l’annuaire ; bouton Bluesky retiré.

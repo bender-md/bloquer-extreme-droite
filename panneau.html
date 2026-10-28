@@ -194,7 +194,8 @@
   .mini:hover { text-decoration: underline; }
 
   .source { margin: 0 0 4px; font-size: 13px; color: var(--gris); }
-  .source a { color: var(--violet); font-weight: 500; text-decoration: none; display: inline-block; padding: 2px 0; }
+  .source a { color: var(--violet); font-weight: 500; text-decoration: none; }
+  .source .insecable { white-space: nowrap; } /* « @unfachoko (crédits) » ne se coupe jamais */
   .source a:hover { text-decoration: underline; }
   .credits { margin-top: 18px; background: linear-gradient(135deg, #ffffff 0%, #f6f5ff 100%); }
   .credits p { color: var(--gris); margin: 0 0 8px; line-height: 1.6; }
@@ -252,7 +253,7 @@
     <div>
       <div class="logo"><img src="icones/48.png" alt="" width="30" height="30"> Extension Chrome</div>
       <h1>On bloque<br>l’extrême droite.<br><span class="auto">automatiquement</span></h1>
-      <p class="source">Outil indépendant qui automatise le blocage · liste issue de l'annuaire <a href="https://onbloquelextremedroite.fun/" target="_blank" rel="noopener">onbloquelextremedroite.fun</a>, une initiative de <a href="https://x.com/unfachoko" target="_blank" rel="noopener">@unfachoko</a> (<a href="#credits">crédits</a>)</p>
+      <p class="source">Outil indépendant qui automatise le blocage · liste issue de l'annuaire <a href="https://onbloquelextremedroite.fun/" target="_blank" rel="noopener">onbloquelextremedroite.fun</a>, une initiative de <span class="insecable"><a href="https://x.com/unfachoko" target="_blank" rel="noopener">@unfachoko</a> (<a href="#credits">crédits</a>)</span></p>
       <p class="sous" id="resume" role="status">Chargement de la liste des comptes… (quelques secondes)</p>
     </div>
     <div class="tete-droite">

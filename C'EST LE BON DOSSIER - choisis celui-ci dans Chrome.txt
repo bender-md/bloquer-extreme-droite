@@ -1,0 +1,9 @@
+C'est le bon dossier !
+
+Dans Chrome, page chrome://extensions, avec le « Mode développeur » activé :
+clique sur « Charger l'extension non empaquetée » et choisis CE dossier
+(celui qui contient ce fichier et manifest.json).
+
+Ne supprime pas ce dossier : Chrome en a besoin pour que l'extension marche.
+
+Tutoriel complet avec images : https://github.com/bender-md/bloquer-extreme-droite
