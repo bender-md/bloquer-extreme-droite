@@ -1,5 +1,12 @@
 # Historique des versions
 
+## 2.15
+
+- **Comptes à rebours en anneau** : pendant les pauses, un cercle se vide avec les secondes au centre (grand dans la carte, petit par réseau).
+- **Derniers comptes** dans la carte « Phase de blocage en cours » : les 5 derniers comptes traités, pour voir que ça avance sans descendre.
+- **« à bloquer » par catégorie** : chaque catégorie (et chaque pays) indique combien de blocages il reste à faire sur les réseaux cochés.
+- Journal plus lisible sur petit écran.
+
 ## 2.14
 
 - **Installation plus simple** : le fichier téléchargé donne directement le bon dossier (plus de dossier dans le dossier),

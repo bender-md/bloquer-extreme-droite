@@ -158,6 +158,14 @@ let suivi = null;
 const TITRE_PAGE = document.title;
 const RAISONS = { deconnecte: 'pas connecté', limite: 'limite du réseau, attends 30 min', captcha: 'vérification « robot » demandée', erreurs: '3 erreurs de suite' };
 const duree = (ms) => { const m = Math.round(ms / 60000); return m < 1 ? 'moins d’une minute' : m < 60 ? `${m} min` : `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')}`; };
+// Compte à rebours en anneau : le cercle se vide pendant la pause, les secondes restantes au centre.
+// L'animation CSS repart du bon endroit à chaque rafraîchissement (délai négatif = temps déjà écoulé) : le cercle tourne sans à-coups.
+function anneau(restantMs, totalMs, classe = '') {
+  const total = Math.max(totalMs, restantMs, 1000) / 1000, ecoule = total - restantMs / 1000;
+  return `<span class="anneau ${classe}" style="--t:${total.toFixed(2)}s;--d:-${ecoule.toFixed(2)}s" role="img" aria-label="${Math.ceil(restantMs / 1000)} secondes">
+    <svg viewBox="0 0 36 36" aria-hidden="true"><circle class="fond" cx="18" cy="18" r="15.9"/><circle class="reste" cx="18" cy="18" r="15.9" pathLength="100"/></svg>
+    <b>${Math.ceil(restantMs / 1000)}</b></span>`;
+}
 function majSuivi() {
   const carte = $('suivi');
   carte.hidden = !suivi;
@@ -174,12 +182,14 @@ function majSuivi() {
     return { reste: Math.max(0, s.prevus - s.faits), pas: (min + max) / 2 + 6 };
   });
   const estime = Math.max(...restes.map((r) => r.reste * r.pas), restes.reduce((t, r) => t + r.reste * 6, 0), 0) * 1000;
-  let phrase;
+  let phrase, rebours = '';
   if (suivi.fin) phrase = suivi.fin;
   else if (enCours?.courant) phrase = `Ouverture du profil : ${enCours.courant}`;
   else if (enCours) {
-    const att = Math.min(...enCours.actifs.filter((id) => !suivi.reseaux[id].arret && enCours.prochain[id] > Date.now()).map((id) => enCours.prochain[id] - Date.now()));
-    phrase = Number.isFinite(att) ? `Petite pause pour protéger ton compte : prochain profil dans ${Math.ceil(att / 1000)} s` : 'On passe au profil suivant…';
+    const enPause = enCours.actifs.filter((id) => !suivi.reseaux[id].arret && enCours.prochain[id] > Date.now());
+    const id = enPause.sort((a, b) => enCours.prochain[a] - enCours.prochain[b])[0];
+    phrase = id ? 'Petite pause pour protéger ton compte, puis profil suivant' : 'On passe au profil suivant…';
+    if (id) rebours = anneau(enCours.prochain[id] - Date.now(), enCours.duree[id] || 0, 'grand');
   } else phrase = suivi.etape;
   const temps = suivi.fin ? `Durée : ${duree(Date.now() - suivi.debut)}`
     : `Commencé il y a ${duree(Date.now() - suivi.debut)}${enCours && estime ? ` · fini dans environ ${duree(estime)}` : ''}`;
@@ -188,20 +198,30 @@ function majSuivi() {
       <small>${temps}</small></h2>
     <div class="chiffre">${faits}<small>${verbe} sur ${prevus} prévus dans cette phase${suivi.aBlanc ? ' (personne n’est bloqué)' : ''}</small></div>
     <div class="barre"><i class="bloques" style="width:${pct(faits, prevus)}"></i></div>
-    <p class="phrase"></p><p class="detail-compte"></p>
+    <div class="phrase-ligne${rebours ? ' en-pause' : ''}">${rebours}<p class="phrase"></p></div><p class="detail-compte"></p>
     <div class="lignes">${ids.map((id) => {
       const s = suivi.reseaux[id];
       const etat = s.arret ? `Arrêté : ${RAISONS[s.arret] || s.arret}` : s.fini ? 'Phase finie' : suivi.fin ? 'Arrêté'
         : enCours?.courant.startsWith(RESEAUX[id].nom + ' :') ? 'En cours'
-        : enCours?.prochain[id] > Date.now() ? `En pause, encore ${Math.ceil((enCours.prochain[id] - Date.now()) / 1000)} s` : 'En attente de son tour';
+        : enCours?.prochain[id] > Date.now() ? `${anneau(enCours.prochain[id] - Date.now(), enCours.duree[id] || 0, 'petit')} En pause` : 'En attente de son tour';
       return `<div class="ligne-suivi${s.arret ? ' arrete' : ''}"><b>${RESEAUX[id].nom}</b>
         <div class="barre"><i class="bloques" style="width:${pct(s.faits, Math.max(s.prevus, s.faits))}"></i></div>
         <span class="nb">${s.faits} / ${Math.max(s.prevus, s.faits)}</span>
         <small>${etat}${s.vus ? ` · ${s.vus} déjà bloqué${s.vus > 1 ? 's' : ''} ou introuvable${s.vus > 1 ? 's' : ''}, passé${s.vus > 1 ? 's' : ''}` : ''}${s.erreurs ? ` · ${s.erreurs} erreur${s.erreurs > 1 ? 's' : ''}` : ''}</small></div>`;
     }).join('')}</div>
+    <div class="derniers"></div>
     <p class="ordre">Ordre : les comptes français d’abord, puis l’étranger, à chaque fois des plus suivis aux moins suivis.</p>`;
   carte.querySelector('.phrase').textContent = phrase; // contient des noms venus de l'annuaire : jamais en HTML
   carte.querySelector('.detail-compte').textContent = !suivi.fin && enCours?.courant ? enCours.detail : '';
+  // Copie des 5 derniers comptes du journal « Ce qui se passe », pour voir que ça avance sans descendre dans la page.
+  const lignes = [...$('journal').querySelectorAll('.ligne-compte')].filter((l) => !$('journal').classList.contains('masquer-deja') || !l.classList.contains('deja')).slice(0, 5);
+  if (lignes.length) {
+    const zone = carte.querySelector('.derniers');
+    const tete = document.createElement('div');
+    tete.className = 'tete-derniers';
+    tete.innerHTML = '<b>Derniers comptes</b> <a href="#titreActivite">Tout voir ↓</a>';
+    zone.append(tete, ...lignes.map((l) => l.cloneNode(true)));
+  }
   if (suivi.fin && !suivi.aBlanc && faits) {
     const t = Object.assign(document.createElement('p'), { className: 'invite', textContent: 'Fais passer le mot :' });
     carte.append(t, boutonsPartage());
@@ -524,15 +544,30 @@ const rangCat = (c) => { const i = ORDRE_CATS.indexOf(c); return i < 0 ? 98 : i;
 const estInter = (c) => c.startsWith('International');
 const pays = (c) => c.split('·')[1]?.trim() || 'Autres pays';
 const catsVues = new Set(); // catégories déjà montrées une fois (au départ : aucune, donc tout arrive coché)
-function pastille(valeur, libelle, n, coche) {
+// n = comptes de la catégorie ; reste = blocages encore à faire sur les réseaux cochés (« ✓ » quand tout est fait).
+function pastille(valeur, libelle, n, coche, reste) {
   const l = document.createElement('label');
   const c = Object.assign(document.createElement('input'), { type: 'checkbox', value: valeur, checked: coche });
   l.append(c, `${libelle} `);
   const s = document.createElement('span');
   s.className = 'nb';
   s.textContent = n;
-  l.append(s);
+  const r = document.createElement('span');
+  r.className = 'reste' + (reste ? '' : ' fini');
+  r.textContent = reste ? `· ${reste.toLocaleString('fr-FR')} à bloquer` : '· tout bloqué';
+  l.append(s, r);
+  l.title = `${n} comptes dans l'annuaire · ${reste ? `${reste} blocages encore à faire` : 'tout est bloqué'} sur les réseaux cochés`;
   return l;
+}
+// Blocages encore à faire, par catégorie, sur les réseaux cochés (ou tous si aucun n'est coché).
+function restesParCategorie() {
+  const ids = reseauxCoches().length ? reseauxCoches() : ORDRE;
+  const reste = {};
+  for (const p of liste.personnes) {
+    const n = ids.filter((id) => p.comptes[id] && !deja(id, p.comptes[id])).length;
+    reste[p.categorie] = (reste[p.categorie] || 0) + n;
+  }
+  return reste;
 }
 function afficherCategories() {
   const cochees = categoriesCochees();
@@ -543,11 +578,13 @@ function afficherCategories() {
   // Correctif : une catégorie qui apparaît après une relecture (ex. « Nouveaux ajouts (à classer) ») arrivait décochée,
   // donc ses comptes n'étaient jamais bloqués. Comme au premier affichage, elle arrive cochée.
   const coche = (c) => !catsVues.has(c) || cochees.has(c);
-  $('categories').replaceChildren(...fr.map((c) => pastille(c, c, compte[c], coche(c))));
-  $('pays').replaceChildren(...inter.map((c) => pastille(c, pays(c), compte[c], coche(c))));
-  $('nbInter').textContent = inter.reduce((s, c) => s + compte[c], 0);
+  const reste = restesParCategorie();
+  const somme = (cs, t) => cs.reduce((s, c) => s + (t[c] || 0), 0);
+  $('categories').replaceChildren(...fr.map((c) => pastille(c, c, compte[c], coche(c), reste[c] || 0)));
+  $('pays').replaceChildren(...inter.map((c) => pastille(c, pays(c), compte[c], coche(c), reste[c] || 0)));
+  $('nbInter').textContent = `${somme(inter, compte)} · ${somme(inter, reste).toLocaleString('fr-FR')} à bloquer`;
   majResumeInter();
-  $('nbFrance').textContent = fr.reduce((s, c) => s + compte[c], 0);
+  $('nbFrance').textContent = `${somme(fr, compte)} · ${somme(fr, reste).toLocaleString('fr-FR')} à bloquer`;
   majInterTout();
   for (const c of Object.keys(compte)) catsVues.add(c);
 }
@@ -815,7 +852,7 @@ async function lancer({ essai = false } = {}) {
 
     fenetre = await nouvelleFenetre();
     const lancement = { erreurs, actions, finis: new Set(), tabId: await ongletDe(fenetre.id) };
-    enCours = { actifs, actions, prochain, courant: '', aBlanc, fenetreId: fenetre.id, max: plafond };
+    enCours = { actifs, actions, prochain, duree: {}, courant: '', aBlanc, fenetreId: fenetre.id, max: plafond };
     while (!arret) {
       const restants = actifs.filter((id) => !lancement.finis.has(id) && files[id].length && actions[id] < plafond(id));
       // Réseau qui n'a plus rien à faire (plafond atteint ou file vide) : fini, et ses « prévus » deviennent ce qui a été fait.
@@ -852,7 +889,9 @@ async function lancer({ essai = false } = {}) {
         if (res === 'captcha') { garderFenetre = true; await chrome.windows.update(fenetre.id, { focused: true }).catch(() => {}); arret = true; }
         continue;
       }
-      prochain[id] = Date.now() + await noterResultat(lancement, id, p, res);
+      const pauseMs = await noterResultat(lancement, id, p, res);
+      prochain[id] = Date.now() + pauseMs;
+      enCours.duree[id] = pauseMs; // pour l'anneau du compte à rebours
     }
   } catch (e) {
     log(`Erreur inattendue (${e.message}) : lancement arrêté.`, 'err');
@@ -888,7 +927,7 @@ $('lancer3').onclick = () => {
 };
 $('masquerGuide').onclick = async () => { guideMasque = true; await chrome.storage.local.set({ guideMasque }); majGuide(); $('ouvrirGuide').focus(); };
 $('ouvrirGuide').onclick = async () => { guideMasque = false; await chrome.storage.local.set({ guideMasque }); majGuide(); $('masquerGuide').focus(); };
-$('reseaux').addEventListener('change', majPret);
+$('reseaux').addEventListener('change', () => { majPret(); afficherCategories(); }); // « à bloquer » dépend des réseaux cochés
 document.querySelectorAll('#categories, #pays, #interTout, #aBlanc').forEach((el) => el.addEventListener('change', () => majPret()));
 $('voirDeja').onchange = (e) => $('journal').classList.toggle('masquer-deja', !e.target.checked);
 const cocherCats = (oui) => { document.querySelectorAll('.cats input').forEach((i) => (i.checked = oui)); majInterTout(); majPret(); };

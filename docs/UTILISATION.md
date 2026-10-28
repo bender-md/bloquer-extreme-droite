@@ -38,6 +38,7 @@ Une carte par réseau (X, TikTok, Instagram, Facebook) :
   journalistes et chroniqueurs, influenceurs, etc. Les comptes ajoutés à l’annuaire récemment, pas encore rangés, sont dans
   « Nouveaux ajouts (à classer) ».
 - **International** : la case « International » coche ou décoche tous les pays ; « Voir par pays » les affiche un par un.
+- **Chaque pastille** indique le nombre de comptes et, après « · », les **blocages encore à faire** sur les réseaux cochés (« tout bloqué » quand c’est fini).
 - **Une pastille colorée = incluse.** Touche-la pour l’exclure. « Tout » et « Aucune » cochent ou décochent tout.
 - **Consulter la liste** ouvre une fenêtre avec tous les comptes : filtre par catégorie, recherche par nom ou @,
   et pour chaque personne ses réseaux (un ✓ vert = déjà bloqué). Un clic sur un réseau ouvre le profil.
@@ -71,6 +72,7 @@ Un compte déjà bloqué ou introuvable ne compte pas dans le maximum et n’ent
 - **La carte « Phase de blocage en cours »** apparaît en haut du panneau : nombre de comptes bloqués sur le total prévu,
   le profil en cours (pays ou catégorie, abonnés, raison donnée par l’annuaire), l’état de chaque réseau
   (« En cours », « En pause, encore 12 s », « Phase finie », « Arrêté : … ») et le temps restant estimé.
+  Pendant les pauses, un anneau se vide avec les secondes restantes. En bas de la carte, les 5 derniers comptes traités.
   Le titre de l’onglet affiche aussi l’avancement (« 12/80 bloqués »). À la fin, la carte garde le bilan de la phase.
 - **Arrêter** : l’extension s’arrête tout de suite (elle termine seulement le compte en cours).
 - **Lire mes bloqués maintenant** (Réglages, outils avancés) : lit tout de suite ta liste de comptes bloqués.

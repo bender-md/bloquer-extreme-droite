@@ -82,6 +82,9 @@
   /* Catégories en pastilles */
   .cats { display: flex; flex-wrap: wrap; gap: 8px; }
   .cats label .nb { opacity: .7; font-variant-numeric: tabular-nums; }
+  .cats label .reste { font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .cats label .reste.fini { color: var(--vert); }
+  #categories label:not(:has(input:checked)) .reste, #pays label:not(:has(input:checked)) .reste { font-weight: 400; }
   .groupe { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--pale); margin: 4px 0 8px; display: inline-flex; align-items: center; gap: 8px; }
   .groupe span { font-weight: 500; }
   .inter-tete { margin-top: 14px; border-top: 1px solid var(--trait); padding-top: 12px; display: flex; justify-content: space-between; align-items: center; }
@@ -212,7 +215,20 @@
   .suivi .chiffre { font-size: 40px; letter-spacing: -0.03em; line-height: 1; margin-bottom: 12px; }
   .suivi .chiffre small { font-size: 14px; color: var(--gris); letter-spacing: 0; margin-left: 8px; }
   .suivi > .barre { height: 14px; }
-  .suivi .phrase { margin: 12px 0 14px; font-weight: 500; overflow-wrap: anywhere; }
+  .suivi .phrase-ligne { display: flex; align-items: center; gap: 12px; margin: 12px 0 14px; min-height: 44px; }
+  .suivi .phrase { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
+  /* Comptes à rebours en anneau */
+  .anneau { position: relative; display: inline-grid; place-items: center; flex: none; width: 24px; height: 24px; vertical-align: middle; }
+  .anneau svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .anneau circle { fill: none; stroke-width: 3.2; }
+  .anneau .fond { stroke: #e7e8f2; }
+  .anneau .reste { stroke: var(--violet); stroke-linecap: round; stroke-dasharray: 100; animation: decompte var(--t) linear var(--d) forwards; }
+  .anneau b { position: relative; font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--encre); }
+  .anneau.grand { width: 44px; height: 44px; }
+  .anneau.grand b { font-size: 14px; }
+  @keyframes decompte { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 100; } }
+  .ligne-suivi small .anneau { margin: -3px 4px -3px 0; }
+  .suivi .phrase-ligne.en-pause .phrase::before { display: none; }
   .suivi:not(.fini) .phrase::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 99px; background: var(--vert); box-shadow: 0 0 0 4px var(--vert-fond); margin-right: 10px; animation: pouls 1.6s infinite; vertical-align: 1px; }
   .suivi .detail-compte { margin: -8px 0 14px 18px; color: var(--gris); font-size: 13px; overflow-wrap: anywhere; }
   .suivi .detail-compte:empty { display: none; }
@@ -221,6 +237,10 @@
   .ligne-suivi .nb { font-variant-numeric: tabular-nums; font-weight: 600; }
   .ligne-suivi small { grid-column: 1 / -1; color: var(--gris); font-size: 12px; }
   .ligne-suivi.arrete small { color: var(--rouge); }
+  .suivi .derniers:not(:empty) { margin-top: 14px; border-top: 1px solid var(--trait); padding-top: 10px; }
+  .tete-derniers { display: flex; justify-content: space-between; align-items: center; font-size: 13px; min-height: 32px; }
+  .tete-derniers a { color: var(--violet); text-decoration: none; font-weight: 500; padding: 8px 0; }
+  .suivi .derniers .ligne-compte:last-child { border-bottom: 0; }
   .suivi .ordre { font-size: 12px; color: var(--pale); margin: 12px 0 0; }
   /* Partager */
   .partager { margin-top: 18px; }
@@ -242,6 +262,8 @@
   .actions-retire .fait { min-height: 40px; box-shadow: none; padding: 0 14px; }
   .actions-retire .pas-connecte { font-size: 12.5px; color: var(--gris); padding: 0 8px; }
   .tete-retires:not(:empty) { margin: 0 0 12px; }
+  /* Téléphone : une ligne de journal = heure, réseau, nom, état (le lien du profil reste dans la page du réseau) */
+  @media (max-width: 560px) { .ligne-compte .lien, .ligne-compte time { display: none; } .ligne-compte .res { min-width: 0; } .ligne-compte .nom { max-width: none; flex: 1; min-width: 0; } .ligne-compte .pourquoi-compte { padding-left: 0; } }
   @media (max-width: 900px) { .etapes { grid-template-columns: 1fr; } }
   @media (max-width: 760px) { .suivi h2 { flex-direction: column; gap: 2px; } .suivi .chiffre small { display: block; margin: 8px 0 0; } .ligne-suivi { grid-template-columns: 70px minmax(0, 1fr) auto; }
     header { flex-direction: column; } .tete-droite { align-items: flex-start; } .avance-ligne { flex-direction: column; align-items: flex-start; } .grille { grid-template-columns: 1fr; } .cadre { margin: 0; border-radius: 0; padding: 18px; } h1 { font-size: 34px; } }
@@ -299,7 +321,7 @@
 
     <section class="carte" id="carteCats" aria-labelledby="titreCats">
       <h2 id="titreCats">Quels comptes bloquer ?</h2>
-      <p class="note" style="margin:-8px 0 4px">Tout est coché au départ. Touche une catégorie pour la retirer ou la remettre.</p>
+      <p class="note" style="margin:-8px 0 4px">Tout est coché au départ. Touche une catégorie pour la retirer ou la remettre. « à bloquer » = blocages encore à faire sur les réseaux cochés.</p>
       <div class="actions-cats"><button class="mini" id="voirListe">Voir les comptes de la liste</button><button class="mini" id="catTout">Tout cocher</button><button class="mini" id="catRien">Tout décocher</button></div>
       <p class="groupe">France <span id="nbFrance"></span></p>
       <div id="categories" class="cats" role="group" aria-label="Catégories France"></div>

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "On bloque l’extrême droite. Automatiquement",
-  "version": "2.14",
+  "version": "2.15",
   "description": "Outil indépendant qui automatise le blocage sur X, TikTok, Instagram et Facebook, à partir de la liste de l'annuaire onbloquelextremedroite.fun (initiative de @unfachoko).",
   "permissions": [
     "alarms",
