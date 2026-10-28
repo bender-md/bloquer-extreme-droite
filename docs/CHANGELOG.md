@@ -1,5 +1,10 @@
 # Historique des versions
 
+## 2.18
+
+- **Correctif** : quand un réseau coché n’avait aucun compte à faire (tous déjà bloqués), le blocage s’arrêtait avec
+  « Erreur inattendue (… reading 'arret') ». Il continue maintenant normalement, et un problème d’affichage ne peut plus arrêter un blocage.
+
 ## 2.17
 
 - **La liste est lue sur une copie publiée dans ce dépôt** ([`donnees/annuaire.json`](../donnees/annuaire.json)), mise à jour toutes

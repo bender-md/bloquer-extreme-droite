@@ -150,7 +150,7 @@ function majStatut() {
   const mode = aBlanc ? 'Essai (personne n’est bloqué) — ' : '';
   $('statut').textContent = courant ? `${mode}En cours : ${courant} · ${parts}` : `${mode}Petite pause, prochain compte dans ${att} s · ${parts} · laisse cet onglet ouvert`;
 }
-setInterval(() => { majStatut(); if (enCours) majSuivi(); }, 1000);
+setInterval(() => { majStatut(); if (enCours) { try { majSuivi(); } catch (e) { console.warn('affichage du suivi', e); } } }, 1000);
 
 // ——— Carte « Blocage en cours » : avancement du lancement, réseau par réseau ———
 // suivi = { aBlanc, debut, etape, fin, reseaux: { id: { prevus, faits, vus, erreurs, arret } } } ; reste affiché après la fin.
@@ -186,7 +186,9 @@ function majSuivi() {
   if (suivi.fin) phrase = suivi.fin;
   else if (enCours?.courant) phrase = `Ouverture du profil : ${enCours.courant}`;
   else if (enCours) {
-    const enPause = enCours.actifs.filter((id) => !suivi.reseaux[id].arret && enCours.prochain[id] > Date.now());
+    // Correctif : un réseau sans aucun compte à faire n'a pas de ligne dans le suivi (suivi.reseaux[id] absent) ;
+    // lire son « arret » plantait et arrêtait tout le lancement.
+    const enPause = enCours.actifs.filter((id) => suivi.reseaux[id] && !suivi.reseaux[id].arret && enCours.prochain[id] > Date.now());
     const id = enPause.sort((a, b) => enCours.prochain[a] - enCours.prochain[b])[0];
     phrase = id ? 'Petite pause pour protéger ton compte, puis profil suivant' : 'On passe au profil suivant…';
     if (id) rebours = anneau(enCours.prochain[id] - Date.now(), enCours.duree[id] || 0, 'grand');
@@ -786,7 +788,8 @@ async function noterResultat(lancement, id, p, res) {
   const s = suivi?.reseaux[id];
   if (s) { if (aAgi) s.faits++; else if (res.startsWith('erreur')) s.erreurs++; else s.vus++; }
   if (s && erreurs[id] >= 3) s.arret = 'erreurs';
-  majSuivi();
+  // L'affichage ne doit jamais arrêter un lancement : une erreur d'affichage est seulement notée dans la console.
+  try { majSuivi(); } catch (e) { console.warn('affichage du suivi', e); }
   // Pause « prudente » après une action (ou une erreur), courte quand le compte était déjà fait.
   const { min, max } = r.rythme;
   return (aAgi || res.startsWith('erreur') ? min + Math.random() * (max - min) : 4 + Math.random() * 4) * 1000;
