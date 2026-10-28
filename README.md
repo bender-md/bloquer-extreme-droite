@@ -68,7 +68,14 @@ Tout se fait **sur ton ordinateur, dans Google Chrome**. Le tutoriel montre Chro
 Clique ici : **[⬇️ Télécharger l’extension](https://github.com/bender-md/bloquer-extreme-droite/releases/latest/download/bloquer-extreme-droite.zip)**.
 Un fichier `.zip` arrive dans ton dossier **Téléchargements**.
 
-> (Si tu as plutôt utilisé le bouton vert **« Code » → « Download ZIP »**, ça marche aussi : suis les mêmes étapes.)
+**Il y a deux façons de télécharger sur GitHub. Les deux marchent**, seul le nom du dossier change :
+
+| Ce sur quoi tu cliques | Ce que tu obtiens | Le dossier à choisir à l’étape 4 |
+|---|---|---|
+| **⬇️ Télécharger l’extension** (le lien ci-dessus, conseillé) | `bloquer-extreme-droite.zip` : seulement l’extension | `bloquer-extreme-droite` |
+| Le bouton vert **« Code » → « Download ZIP »** (en haut de la page) | `bloquer-extreme-droite-main.zip` : l’extension + les explications du projet | `bloquer-extreme-droite-main` |
+
+Dans les deux cas, le dossier à choisir est **celui qui contient le fichier `manifest.json`** (voir l’étape 2).
 
 ### Étape 2 : décompresser et trouver le bon dossier
 
