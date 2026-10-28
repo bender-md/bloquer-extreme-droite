@@ -1,6 +1,6 @@
 # Fonctionnement technique
 
-Extension Chrome **Manifest V3**, sans dépendance, sans étape de compilation : les fichiers du dossier `extension/` sont chargés tels quels.
+Extension Chrome **Manifest V3**, sans dépendance, sans étape de compilation : les fichiers à la racine du dépôt sont chargés tels quels.
 
 ## Fichiers
 
@@ -78,5 +78,5 @@ c’est ce qu’il faut joindre à un signalement.
   fonction `agir`, éventuellement `bloques`), le nom dans `ORDRE`, et le domaine dans `host_permissions` du manifest.
 - **La liste** (ajout, retrait d’un compte) se gère sur l’annuaire, pas ici.
 - **Règles** : pas de dépendance externe, aucune donnée envoyée hors des sites listés, rythmes prudents, textes en français simple.
-- **Publier une version** : augmenter `version` dans `extension/manifest.json`, compléter `docs/CHANGELOG.md`, lancer
+- **Publier une version** : augmenter `version` dans `manifest.json`, compléter `docs/CHANGELOG.md`, lancer
   `scripts/empaqueter.sh`, et joindre `dist/bloquer-extreme-droite.zip` à une Release (modèle : `scripts/modele-release.md`).

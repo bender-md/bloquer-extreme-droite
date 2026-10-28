@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Produit dist/bloquer-extreme-droite.zip à partir du dossier extension/ (nom fixe : le lien « dernière version » du README ne change jamais).
+# Produit dist/bloquer-extreme-droite.zip avec les fichiers de l'extension (racine du dépôt, sans la doc) (nom fixe : le lien « dernière version » du README ne change jamais).
 # Zip reproductible : fichiers triés, date fixe (1980-01-01 00:00), droits neutres, aucun champ propriétaire/utilisateur.
 # Le zip contient un dossier « bloquer-extreme-droite/ » : c'est lui qu'on choisit dans « Charger l'extension non empaquetée ».
 # Usage : scripts/empaqueter.sh   (depuis n'importe où)
 set -euo pipefail
 RACINE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-EXT="$RACINE/extension"
+EXT="$RACINE"
 NOM="bloquer-extreme-droite"
 command -v python3 >/dev/null || { echo "python3 est nécessaire (macOS : xcode-select --install)." >&2; exit 1; }
 VERSION="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["version"])' "$EXT/manifest.json")"
@@ -15,10 +15,11 @@ rm -f "$SORTIE"
 python3 -I - "$EXT" "$SORTIE" "$NOM" <<'PY'
 import os, sys, zipfile
 ext, sortie, nom = sys.argv[1:]
-ignores = {'.DS_Store', 'Thumbs.db', 'desktop.ini', 'README.md'}
+ignores = {'.DS_Store', 'Thumbs.db', 'desktop.ini', 'README.md', 'LICENSE', '.gitignore'}
+hors = {'docs', 'scripts', 'donnees', 'dist'}  # dossiers du dépôt qui ne font pas partie de l'extension
 fichiers = []
 for dossier, sous, noms in os.walk(ext):
-    sous[:] = sorted(d for d in sous if not d.startswith('.'))
+    sous[:] = sorted(d for d in sous if not d.startswith('.') and not (dossier == ext and d in hors))
     for n in noms:
         if n in ignores or n.startswith('.') or n.endswith('~'):
             continue

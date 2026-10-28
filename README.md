@@ -40,7 +40,7 @@ puis suis le <a href="#installation-pas-à-pas-5-minutes">tutoriel d’installat
 - **Elle n’a accès qu’à 5 sites** : x.com, tiktok.com, instagram.com, facebook.com et onbloquelextremedroite.fun. Elle ne voit pas le reste de ta navigation.
   Elle lit aussi le classement des comptes publié sur cette page GitHub (un simple fichier, sans rien envoyer).
 - **Ta progression reste dans ton navigateur.**
-- **Le code est public** : tout est lisible dans le dossier [`extension/`](extension), n’importe qui peut le vérifier.
+- **Le code est public** : tout est lisible sur cette page (fichiers `.js` et `.html`), n’importe qui peut le vérifier.
 - **Elle ne fait que bloquer** : elle n’écrit à personne, ne signale personne, ne publie rien.
 
 **Pourquoi Chrome parle de « mode développeur » ?** Parce que l’extension n’est pas sur le Chrome Web Store
@@ -68,7 +68,8 @@ Tout se fait **sur ton ordinateur, dans Google Chrome**. Le tutoriel montre Chro
 Clique ici : **[⬇️ bloquer-extreme-droite.zip](https://github.com/bender-md/bloquer-extreme-droite/releases/latest/download/bloquer-extreme-droite.zip)**.
 Le fichier arrive dans ton dossier **Téléchargements**.
 
-> Sur la page « Releases » de GitHub, ne prends **pas** « Source code (zip) » : ce n’est pas le bon fichier.
+> Tu as plutôt cliqué sur le bouton vert **« Code » → « Download ZIP »** ? Ça marche aussi : à l’étape 4, choisis simplement
+> le dossier **`bloquer-extreme-droite-main`** (celui qui contient `manifest.json`).
 
 ### Étape 2 : décompresser
 
@@ -95,7 +96,8 @@ Opera `opera://extensions` · Vivaldi `vivaldi://extensions`.
 
 1. **Active le « Mode développeur »** : l’interrupteur en haut à droite.
 2. **Clique sur « Charger l’extension non empaquetée »** (en anglais : *Load unpacked*), qui vient d’apparaître en haut à gauche.
-   Choisis le dossier **`bloquer-extreme-droite`** de l’étape 2, puis **« Sélectionner »**.
+   Choisis le dossier **`bloquer-extreme-droite`** de l’étape 2 (ou `bloquer-extreme-droite-main`), puis **« Sélectionner »**.
+   Il faut choisir le dossier qui contient le fichier `manifest.json`.
 3. **L’extension apparaît** dans la liste : « On bloque l’extrême droite. Automatiquement ». C’est installé !
 
 ### Étape 5 : épingler l’icône
