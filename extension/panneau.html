@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" sizes="32x32" href="icones/32.png">
+<title>On bloque l’extrême droite. Automatiquement</title>
+<style>
+  :root {
+    --fond: #e9ebf3; --cadre: #f4f5fa; --carte: #ffffff; --encre: #15161c; --gris: #6e7180; --pale: #6f7282; --trait: #eceef4;
+    --violet: #5b5bf6; --violet2: #8b5cf6; --vert: #0f7a45; --vert-fond: #e7f6ee; --rouge: #c8323a; --rouge-fond: #fdeced;
+    --ombre: 0 1px 2px rgba(20, 22, 40, .04), 0 8px 24px rgba(20, 22, 40, .06);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fond); color: var(--encre); font: 14px/1.5 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+  .cadre { max-width: 1080px; margin: 20px auto; background: var(--cadre); border-radius: 32px; padding: 28px; box-shadow: var(--ombre); }
+  header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 18px; }
+  .tete-droite { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex: none; }
+  .logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: 16px; margin-bottom: 12px; }
+  .logo img { border-radius: 9px; }
+  h1 { font-size: 38px; font-weight: 400; letter-spacing: -0.03em; line-height: 1.05; margin: 0 0 6px; }
+  h1 .auto { color: var(--violet); }
+  .sous { color: var(--gris); margin: 0; }
+  .etiquette { background: var(--carte); border-radius: 99px; padding: 9px 16px; color: var(--gris); font-size: 13px; box-shadow: var(--ombre); white-space: nowrap; }
+  .grille { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+  .carte { background: var(--carte); border-radius: 24px; padding: 20px 22px; box-shadow: var(--ombre); }
+  .carte.large { grid-column: 1 / -1; }
+  .carte h2 { font-size: 15px; font-weight: 600; margin: 0 0 14px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .carte h2 small { font-size: 12px; font-weight: 400; color: var(--pale); }
+
+  /* Guide « Pour commencer » */
+  .guide { margin-bottom: 18px; }
+  .etapes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; counter-reset: e; }
+  .etape { background: #f8f9fc; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; border: 2px solid transparent; }
+  .etape .tete-etape { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; }
+  .etape .num { width: 28px; height: 28px; border-radius: 99px; display: grid; place-items: center; background: #e4e5ee; color: var(--encre); font-weight: 600; font-size: 13px; flex: none; }
+  .etape p { margin: 0; color: var(--gris); font-size: 13px; line-height: 1.45; }
+  .etape p b { color: var(--encre); font-weight: 600; }
+  .etape .etat-etape { font-size: 12.5px; font-weight: 500; color: var(--gris); }
+  .etape button { margin-top: auto; align-self: flex-start; box-shadow: none; }
+  .etape.actuelle { border-color: #c9c8fb; background: #fff; box-shadow: var(--ombre); }
+  .etape.actuelle .num { background: linear-gradient(135deg, var(--violet), var(--violet2)); color: #fff; }
+  .etape.fait .num { background: var(--vert-fond); color: var(--vert); font-size: 0; }
+  .etape.fait .num::after { content: "✓"; font-size: 15px; }
+  .etape.fait .etat-etape { color: var(--vert); }
+  .signal { animation: signal 1.2s 2; }
+  @keyframes signal { 50% { box-shadow: 0 0 0 4px #c9c8fb, var(--ombre); } }
+  .total-aide { font-size: 12.5px; color: var(--gris); margin: 12px 0 0; }
+
+  /* Carte du total : gros chiffre + barre */
+  #total .chiffre { font-size: 46px; font-weight: 400; letter-spacing: -0.03em; line-height: 1; }
+  #total .chiffre small { font-size: 14px; color: var(--gris); letter-spacing: 0; margin-left: 8px; }
+  #total .detail { color: var(--gris); margin: 10px 0 14px; }
+  #total .detail b { color: var(--encre); font-weight: 600; }
+
+  .barre { display: flex; height: 10px; border-radius: 99px; background: #eef0f6; overflow: hidden; }
+  #total .barre { height: 14px; }
+  .barre i { display: block; height: 100%; transition: width .4s; }
+  .barre i.bloques { background: linear-gradient(90deg, var(--violet), var(--violet2)); }
+  .barre i.verifies { background: repeating-linear-gradient(135deg, #b9bbf9 0 4px, #dcdcfc 4px 8px); }
+  .cles { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12px; color: var(--gris); margin-top: 10px; }
+  .cles span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; vertical-align: 0; }
+  .cles .k1::before { background: var(--violet); } .cles .k2::before { background: #b9bbf9; } .cles .k3::before { background: #eef0f6; border: 1px solid #dfe1ea; }
+
+  /* Réseaux */
+  #reseaux { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .reseau { background: #f8f9fc; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .reseau .titre { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; cursor: pointer; }
+  .reseau .titre input { width: 18px; height: 18px; accent-color: var(--violet); margin: 0; }
+  .session { align-self: flex-start; font-size: 12px; font-weight: 500; border-radius: 99px; padding: 3px 10px 3px 8px; display: inline-flex; align-items: center; gap: 6px; }
+  .session::before { content: ""; width: 6px; height: 6px; border-radius: 99px; background: currentColor; }
+  .session.oui { background: var(--vert-fond); color: var(--vert); }
+  .session.non { background: var(--rouge-fond); color: var(--rouge); }
+  .legende { display: flex; flex-wrap: wrap; gap: 2px 10px; font-size: 12px; color: var(--gris); }
+  .legende b { color: var(--encre); font-weight: 600; }
+  .chiffres { font-size: 12px; color: var(--pale); }
+  .reseau .connexion { align-self: stretch; font-size: 13px; font-weight: 600; color: #fff; background: var(--violet); text-decoration: none; border-radius: 99px; min-height: 40px; display: inline-flex; align-items: center; justify-content: center; padding: 0 14px; }
+  .reseau .connexion:hover { background: #4646e0; }
+  .reseau .titre { min-height: 40px; }
+  .reseau.inactif .titre { color: var(--gris); }
+
+
+  /* Catégories en pastilles */
+  .cats { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cats label .nb { opacity: .7; font-variant-numeric: tabular-nums; }
+  .groupe { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--pale); margin: 4px 0 8px; display: inline-flex; align-items: center; gap: 8px; }
+  .groupe span { font-weight: 500; }
+  .inter-tete { margin-top: 14px; border-top: 1px solid var(--trait); padding-top: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .inter-tete .groupe { margin: 0; cursor: pointer; min-height: 40px; }
+  .inter-tete .groupe input { width: 16px; height: 16px; accent-color: var(--violet); margin: 0; }
+  #pays { margin-top: 12px; }
+  #pays[hidden] { display: none; }
+  .actions-cats { display: flex; flex-wrap: wrap; gap: 0 4px; margin: 0 0 8px -8px; }
+  .resume-inter { font-size: 12px; color: var(--gris); margin: 6px 0 0; }
+  #categories label, #pays label { display: inline-flex; align-items: center; gap: 6px; border-radius: 99px; padding: 7px 14px; background: #f3f4f8; color: var(--gris); font-size: 13px; cursor: pointer; user-select: none; min-height: 40px; position: relative; }
+  #categories label:has(input:checked), #pays label:has(input:checked) { background: #ecebff; color: #3b3bd1; }
+  .cats input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
+  #categories label:has(input:checked)::before, #pays label:has(input:checked)::before { content: "✓"; font-weight: 700; }
+  .cats label:has(input:focus-visible) { outline: 3px solid var(--violet); outline-offset: 2px; }
+
+  /* Fenêtre « Consulter la liste » */
+  dialog#consulter { border: 0; border-radius: 24px; padding: 0; width: min(760px, 94vw); max-height: 86vh; box-shadow: 0 30px 80px rgba(20,22,40,.25); color: var(--encre); }
+  dialog#consulter::backdrop { background: rgba(21,22,28,.35); backdrop-filter: blur(2px); }
+  .entete-liste { position: sticky; top: 0; background: var(--carte); padding: 18px 20px 12px; border-bottom: 1px solid var(--trait); display: grid; gap: 10px; }
+  .entete-liste .titre-liste { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 16px; }
+  .entete-liste .filtres { display: flex; gap: 8px; flex-wrap: wrap; }
+  .entete-liste select, .entete-liste input { font: inherit; border: 1px solid var(--trait); background: #f8f9fc; border-radius: 12px; padding: 8px 12px; min-height: 40px; }
+  .entete-liste input { flex: 1; min-width: 180px; }
+  .entete-liste small { color: var(--pale); }
+  #consulterListe { padding: 6px 20px 20px; overflow: auto; max-height: calc(86vh - 150px); }
+  .fiche { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--trait); }
+  .fiche b { display: block; font-weight: 500; }
+  .fiche small { color: var(--pale); font-size: 12px; }
+  .fiche .liens { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .fiche .liens a { font-size: 12px; text-decoration: none; color: var(--gris); background: #f3f4f8; border-radius: 99px; padding: 3px 10px; }
+  .fiche .liens a.fait { color: var(--vert); background: var(--vert-fond); }
+  .fermer { border: 0; box-shadow: none; background: #f3f4f8; width: 40px; min-height: 40px; padding: 0; border-radius: 99px; font-size: 18px; }
+
+  /* Réglages */
+  .option { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--trait); }
+  .option label { flex: 1; cursor: pointer; }
+  .option label b { font-weight: 600; }
+  .aide { display: block; font-size: 12.5px; color: var(--gris); line-height: 1.45; margin-top: 2px; }
+  .conseil { font-size: 11px; font-weight: 600; color: #3b3bd1; background: #ecebff; border-radius: 99px; padding: 1px 8px; margin-left: 6px; white-space: nowrap; }
+  .option:last-of-type { border-bottom: 0; }
+  .option input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--violet); margin: 2px 0 0; flex: none; cursor: pointer; }
+  .option input[type=number] { width: 112px; min-height: 40px; flex: none; border: 1px solid #d9dbe5; background: #f8f9fc; border-radius: 10px; padding: 6px 10px; font: inherit; }
+  details.pourquoi { margin-top: 10px; font-size: 13px; }
+  details.pourquoi summary, .credits-plus summary { cursor: pointer; color: var(--violet); font-weight: 500; min-height: 40px; display: flex; align-items: center; gap: 6px; }
+  details.pourquoi summary, .credits-plus summary { list-style: none; }
+  details.pourquoi summary::-webkit-details-marker, .credits-plus summary::-webkit-details-marker { display: none; }
+  details.pourquoi summary::before, .credits-plus summary::before { content: "▸"; }
+  details[open].pourquoi > summary::before, details[open].credits-plus > summary::before { content: "▾"; }
+  details.pourquoi p { color: var(--gris); margin: 4px 0 0; font-size: 12.5px; }
+  .avance { margin-top: 14px; border-top: 1px solid var(--trait); padding-top: 12px; display: grid; gap: 10px; }
+  .avance .groupe { margin: 0; }
+  .avance-ligne { display: flex; align-items: center; gap: 12px; }
+  .avance-ligne button { flex: none; box-shadow: none; }
+  .avance-ligne .aide { margin: 0; }
+  .note { font-size: 12px; color: var(--pale); margin: 10px 0 0; }
+
+  button { font: inherit; font-weight: 500; border-radius: 99px; min-height: 44px; padding: 0 20px; cursor: pointer; border: 1px solid var(--trait); background: var(--carte); color: var(--encre); box-shadow: var(--ombre); }
+  button.principal { background: var(--encre); color: #fff; border-color: var(--encre); padding: 0 28px; }
+  button:disabled { opacity: .45; cursor: default; }
+  :focus-visible { outline: 3px solid var(--violet); outline-offset: 2px; }
+  a:focus-visible, button:focus-visible, summary:focus-visible { border-radius: 99px; }
+
+  /* Barre d'actions toujours visible */
+  .barre-actions { position: sticky; bottom: 16px; z-index: 5; margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    background: rgba(255,255,255,.88); backdrop-filter: blur(10px); border-radius: 99px; padding: 8px 8px 8px 20px; box-shadow: 0 10px 30px rgba(20,22,40,.12); }
+  .barre-actions .statut { flex: 1; min-width: 200px; color: var(--gris); font-size: 13.5px; display: flex; align-items: center; gap: 8px; }
+  .barre-actions .statut::before { content: ""; width: 8px; height: 8px; border-radius: 99px; background: #c9cbd6; flex: none; }
+  .barre-actions.encours .statut { color: var(--encre); }
+  .barre-actions.encours .statut::before { background: var(--vert); box-shadow: 0 0 0 4px var(--vert-fond); animation: pouls 1.6s infinite; }
+  .barre-actions.attention .statut { color: var(--rouge); font-weight: 500; }
+  .barre-actions.attention .statut::before { background: var(--rouge); }
+  .barre-actions.pret .statut { color: var(--encre); }
+  .barre-actions.pret .statut::before { background: var(--vert); }
+  @keyframes pouls { 50% { box-shadow: 0 0 0 7px transparent; } }
+  .barre-actions button { box-shadow: none; }
+  button.danger:not(:disabled) { color: var(--rouge); border-color: #f6c9cb; }
+
+  /* Activité */
+  .activite { margin-top: 18px; }
+  .activite h2 { align-items: center; }
+  .compteurs { display: flex; flex-wrap: wrap; gap: 8px; margin: -4px 0 12px; }
+  .compteurs span { font-size: 12px; border-radius: 99px; padding: 3px 10px; background: #f3f4f8; color: var(--gris); }
+  .compteurs b { color: var(--encre); font-weight: 600; }
+  .bascule { font-size: 12.5px; font-weight: 400; color: var(--gris); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; min-height: 40px; }
+  .bascule input { accent-color: var(--violet); width: 18px; height: 18px; margin: 0; }
+  #journal { max-height: 380px; overflow: auto; display: flex; flex-direction: column; }
+  #journal.masquer-deja .ligne-compte.deja { display: none; }
+  .ligne-compte, .ligne-info { display: flex; align-items: center; gap: 10px; padding: 9px 2px; border-bottom: 1px solid var(--trait); font-size: 13px; }
+  .ligne-compte .res { flex: none; font-size: 11px; font-weight: 600; border-radius: 6px; padding: 2px 7px; background: #f0f1f6; color: var(--gris); min-width: 72px; text-align: center; }
+  .ligne-compte .nom { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ligne-compte .lien { color: var(--pale); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+  .ligne-compte { flex-wrap: wrap; }
+  .ligne-compte .nom { max-width: 45%; }
+  .ligne-compte .pourquoi-compte { flex-basis: 100%; padding-left: 62px; margin-top: -4px; color: var(--pale); font-size: 12px; overflow-wrap: anywhere; }
+  .ligne-compte .pourquoi-compte:empty { display: none; }
+  .etat { flex: none; font-size: 12px; font-weight: 500; border-radius: 99px; padding: 2px 10px; }
+  .etat.bloque { background: var(--vert-fond); color: var(--vert); }
+  .etat.deja { background: #f0f1f6; color: var(--gris); }
+  .etat.erreur { background: var(--rouge-fond); color: var(--rouge); }
+  .etat.blanc { background: #ecebff; color: #3b3bd1; }
+  .ligne-info { color: var(--gris); }
+  .ligne-info.err { color: var(--rouge); }
+  .ligne-info.ok { color: var(--vert); }
+  .ligne-info time, .ligne-compte time { flex: none; color: var(--pale); font-size: 11px; font-variant-numeric: tabular-nums; }
+  details.reperes { font-size: 12px; color: var(--gris); padding: 0 0 8px 84px; }
+  details.reperes summary { cursor: pointer; }
+  details.reperes pre { white-space: pre-wrap; margin: 4px 0 0; }
+  .vide { color: var(--pale); font-size: 13px; padding: 18px 0; text-align: center; }
+  .mini { font-size: 12.5px; font-weight: 500; border: 0; background: none; box-shadow: none; color: var(--violet); padding: 0 8px; min-height: 40px; cursor: pointer; }
+  .mini:hover { text-decoration: underline; }
+
+  .source { margin: 0 0 4px; font-size: 13px; color: var(--gris); }
+  .source a { color: var(--violet); font-weight: 500; text-decoration: none; display: inline-block; padding: 2px 0; }
+  .source a:hover { text-decoration: underline; }
+  .credits { margin-top: 18px; background: linear-gradient(135deg, #ffffff 0%, #f6f5ff 100%); }
+  .credits p { color: var(--gris); margin: 0 0 8px; line-height: 1.6; }
+  .credits p b { color: var(--encre); font-weight: 600; }
+  .credits-liens { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 4px; }
+  .credits-liens a { text-decoration: none; font-size: 13px; font-weight: 500; color: var(--encre); background: #fff; border: 1px solid var(--trait); border-radius: 99px; padding: 0 16px; min-height: 40px; display: inline-flex; align-items: center; }
+  .credits-liens a.lien-fort { background: var(--encre); color: #fff; border-color: var(--encre); }
+  .credits-plus { margin-top: 12px; border-top: 1px solid var(--trait); padding-top: 10px; }
+  .credits-plus summary { font-size: 13px; }
+  .credits-plus p { font-size: 13px; margin-top: 8px; }
+  /* Carte « Blocage en cours » */
+  .suivi { margin-bottom: 18px; border: 2px solid #c9c8fb; }
+  .suivi.fini { border-color: transparent; }
+  .suivi .chiffre { font-size: 40px; letter-spacing: -0.03em; line-height: 1; margin-bottom: 12px; }
+  .suivi .chiffre small { font-size: 14px; color: var(--gris); letter-spacing: 0; margin-left: 8px; }
+  .suivi > .barre { height: 14px; }
+  .suivi .phrase { margin: 12px 0 14px; font-weight: 500; overflow-wrap: anywhere; }
+  .suivi:not(.fini) .phrase::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 99px; background: var(--vert); box-shadow: 0 0 0 4px var(--vert-fond); margin-right: 10px; animation: pouls 1.6s infinite; vertical-align: 1px; }
+  .suivi .detail-compte { margin: -8px 0 14px 18px; color: var(--gris); font-size: 13px; overflow-wrap: anywhere; }
+  .suivi .detail-compte:empty { display: none; }
+  .suivi .lignes { display: grid; gap: 10px; }
+  .ligne-suivi { display: grid; grid-template-columns: 90px minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; background: #f8f9fc; border-radius: 14px; padding: 10px 14px; }
+  .ligne-suivi .nb { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .ligne-suivi small { grid-column: 1 / -1; color: var(--gris); font-size: 12px; }
+  .ligne-suivi.arrete small { color: var(--rouge); }
+  .suivi .ordre { font-size: 12px; color: var(--pale); margin: 12px 0 0; }
+  /* Partager */
+  .partager { margin-top: 18px; }
+  .partage { display: flex; flex-wrap: wrap; gap: 8px; }
+  .partage a, .partage button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 99px; border: 1px solid var(--trait);
+    background: var(--carte); color: var(--encre); text-decoration: none; font-size: 13.5px; font-weight: 500; box-shadow: none; }
+  .partage a:hover, .partage button:hover { background: #f3f4f8; }
+  .suivi .invite { margin: 16px 0 8px; font-weight: 500; }
+
+  /* Comptes qui ne sont plus dans la liste */
+  .aide-retires { color: var(--gris); font-size: 13px; margin: -6px 0 12px; }
+  .lignes-retires { display: grid; gap: 8px; justify-items: start; }
+  .retire { justify-self: stretch; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; background: #f8f9fc; border-radius: 14px; padding: 10px 14px; }
+  .retire .qui { min-width: 0; }
+  .retire .qui b { display: block; font-weight: 600; }
+  .retire .qui small { color: var(--pale); font-size: 12px; overflow-wrap: anywhere; }
+  .actions-retire { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .actions-retire a { color: var(--violet); font-weight: 500; text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 8px; }
+  .actions-retire .fait { min-height: 40px; box-shadow: none; padding: 0 14px; }
+  .actions-retire .pas-connecte { font-size: 12.5px; color: var(--gris); padding: 0 8px; }
+  .tete-retires:not(:empty) { margin: 0 0 12px; }
+  @media (max-width: 900px) { .etapes { grid-template-columns: 1fr; } }
+  @media (max-width: 760px) { .suivi h2 { flex-direction: column; gap: 2px; } .suivi .chiffre small { display: block; margin: 8px 0 0; } .ligne-suivi { grid-template-columns: 70px minmax(0, 1fr) auto; }
+    header { flex-direction: column; } .tete-droite { align-items: flex-start; } .avance-ligne { flex-direction: column; align-items: flex-start; } .grille { grid-template-columns: 1fr; } .cadre { margin: 0; border-radius: 0; padding: 18px; } h1 { font-size: 34px; } }
+</style>
+</head>
+<body>
+<div class="cadre">
+  <header>
+    <div>
+      <div class="logo"><img src="icones/48.png" alt="" width="30" height="30"> Extension Chrome</div>
+      <h1>On bloque<br>l’extrême droite.<br><span class="auto">automatiquement</span></h1>
+      <p class="source">Outil indépendant qui automatise le blocage · liste issue de l'annuaire <a href="https://onbloquelextremedroite.fun/" target="_blank" rel="noopener">onbloquelextremedroite.fun</a>, une initiative de <a href="https://x.com/unfachoko" target="_blank" rel="noopener">@unfachoko</a> (<a href="#credits">crédits</a>)</p>
+      <p class="sous" id="resume" role="status">Chargement de la liste des comptes… (quelques secondes)</p>
+    </div>
+    <div class="tete-droite">
+      <span class="etiquette">Liste relue toutes les 10 min</span>
+      <button id="ouvrirGuide" hidden>Comment ça marche ?</button>
+    </div>
+  </header>
+
+  <section class="carte large suivi" id="suivi" aria-labelledby="titreSuivi" hidden></section>
+
+  <section class="carte large guide" id="guide" aria-labelledby="titreGuide">
+    <h2><span id="titreGuide">Pour commencer : 3 étapes</span> <small><button class="mini" id="masquerGuide">Masquer le guide</button></small></h2>
+    <ol class="etapes">
+      <li class="etape" id="etape1">
+        <div class="tete-etape"><span class="num">1</span> Connecte-toi à tes réseaux</div>
+        <p>Dans <b>ce navigateur</b>, connecte-toi normalement à X, TikTok, Instagram ou Facebook (boutons violets plus bas). L'extension ne demande <b>aucun mot de passe</b>.</p>
+        <p class="etat-etape" id="etat1" role="status"></p>
+      </li>
+      <li class="etape" id="etape2">
+        <div class="tete-etape"><span class="num">2</span> Fais un essai à blanc</div>
+        <p>L'extension ouvre 3 profils par réseau <b>sans bloquer personne</b>, pour vérifier que tout marche (1 à 3 minutes).</p>
+        <p class="etat-etape" id="etat2" role="status"></p>
+        <button id="essai" disabled>Faire l'essai à blanc</button>
+      </li>
+      <li class="etape" id="etape3">
+        <div class="tete-etape"><span class="num">3</span> Lance le blocage</div>
+        <p>Les comptes sont bloqués <b>petit à petit</b>, avec des pauses pour protéger ton compte. Tu peux arrêter à tout moment et relancer plus tard pour la suite.</p>
+        <p class="etat-etape" id="etat3" role="status"></p>
+        <button class="principal" id="lancer3" disabled>Lancer le blocage</button>
+      </li>
+    </ol>
+  </section>
+
+  <div class="grille">
+    <section class="carte large" id="carteReseaux" aria-labelledby="titreReseaux">
+      <h2><span id="titreReseaux">Tes réseaux</span> <small>coche ceux où bloquer</small></h2>
+      <div id="reseaux"></div>
+      <p class="note">Tu viens de te connecter dans un autre onglet ? Reviens simplement ici : l'état se met à jour tout seul.</p>
+    </section>
+
+    <section class="carte large" id="total"></section>
+    <section class="carte large" id="retires" aria-label="Comptes qui ne sont plus dans la liste" hidden></section>
+
+    <section class="carte" id="carteCats" aria-labelledby="titreCats">
+      <h2 id="titreCats">Quels comptes bloquer ?</h2>
+      <p class="note" style="margin:-8px 0 4px">Tout est coché au départ. Touche une catégorie pour la retirer ou la remettre.</p>
+      <div class="actions-cats"><button class="mini" id="voirListe">Voir les comptes de la liste</button><button class="mini" id="catTout">Tout cocher</button><button class="mini" id="catRien">Tout décocher</button></div>
+      <p class="groupe">France <span id="nbFrance"></span></p>
+      <div id="categories" class="cats" role="group" aria-label="Catégories France"></div>
+      <div class="inter-tete">
+        <label class="groupe"><input type="checkbox" id="interTout" checked> International <span id="nbInter"></span></label>
+        <button class="mini" id="voirPays" aria-expanded="false" aria-controls="pays">Choisir par pays ▾</button>
+      </div>
+      <p class="resume-inter" id="resumeInter"></p>
+      <div id="pays" class="cats" role="group" aria-label="Pays" hidden></div>
+    </section>
+
+    <section class="carte" aria-labelledby="titreReglages">
+      <h2><span id="titreReglages">Réglages</span> <small>déjà réglés pour être prudents</small></h2>
+      <div class="option"><input type="checkbox" id="aBlanc">
+        <label for="aBlanc"><b>Mode essai (à blanc)</b><span class="conseil">conseillé la 1re fois</span>
+          <span class="aide">L'extension ouvre les profils comme d'habitude mais <b>ne bloque personne</b>. Pratique pour voir comment ça marche.</span></label></div>
+      <div class="option"><input type="checkbox" id="lireAvant" checked>
+        <label for="lireAvant"><b>Lire d'abord mes comptes déjà bloqués</b>
+          <span class="aide">Une fois par jour, avant de commencer, l'extension lit la liste des comptes que tu bloques déjà, pour ne pas rouvrir leurs profils. Ça fait gagner du temps.</span></label></div>
+      <div class="option">
+        <label for="max"><b>Nombre maximum de blocages par phase</b>
+          <span class="aide">Une phase = un lancement. Laisse vide pour le réglage conseillé : X 40, TikTok 25, Instagram et Facebook 15 par phase. <b>Ce n'est pas une limite au total</b> : relance une nouvelle phase autant de fois que tu veux, l'extension reprend là où elle s'est arrêtée.</span></label>
+        <input type="number" id="max" min="1" placeholder="conseillé" title="Laisse vide pour le réglage conseillé"></div>
+      <details class="pourquoi"><summary>Pourquoi c'est volontairement lent ?</summary>
+        <p>Les réseaux surveillent les gestes trop rapides. L'extension fait donc des pauses (X 8 à 20 s, TikTok 15 à 35 s, Instagram et Facebook 30 à 60 s) et passe d'un réseau à l'autre.
+          Si un réseau demande une vérification (captcha), il est mis de côté et sa fenêtre reste ouverte pour que tu la fasses. Plusieurs petites phases espacées (par exemple une par heure) sont plus sûres qu'une seule énorme : augmenter le maximum par phase augmente le risque que ton compte soit limité.</p></details>
+      <div class="avance">
+        <p class="groupe">Outils avancés <span>(rarement utiles)</span></p>
+        <div class="avance-ligne"><button id="lire" disabled>Lire mes bloqués maintenant</button>
+          <span class="aide">Relit tout de suite, sur les réseaux cochés, la liste des comptes que tu as déjà bloqués.</span></div>
+        <div class="avance-ligne"><button id="oublier" class="danger">Tout revérifier…</button>
+          <span class="aide">Fait oublier à l'extension ce qu'elle a déjà fait : <b>tous</b> les profils seront rouverts (beaucoup plus long). Ne débloque personne.</span></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="carte activite" aria-labelledby="titreActivite">
+    <h2><span id="titreActivite">Ce qui se passe</span> <label class="bascule"><input type="checkbox" id="voirDeja" checked> Montrer aussi les « déjà bloqués »</label></h2>
+    <div class="compteurs" id="compteurs" role="status"></div>
+    <div id="journal" role="log" aria-label="Journal d'activité"><div class="vide" id="vide">Rien pour l'instant. Suis les 3 étapes en haut de la page : chaque compte traité s'affichera ici.</div></div>
+  </section>
+
+  <section class="carte partager" aria-labelledby="titrePartage">
+    <h2><span id="titrePartage">Fais passer le mot</span> <small>plus on est nombreux à bloquer, moins ils sont visibles</small></h2>
+    <div id="partage"></div>
+  </section>
+
+  <section class="carte credits" id="credits">
+    <h2>D'où vient la liste</h2>
+    <p>Cette extension est un <b>outil indépendant</b> : elle n'est pas réalisée par l'équipe de l'annuaire. Elle automatise le blocage en s'appuyant sur
+      <b>« On bloque l'extrême droite »</b>, l'initiative de <b>@unfachoko</b>. Tous les comptes viennent de son annuaire collaboratif
+      <b>onbloquelextremedroite.fun</b> : une liste de comptes publics (personnalités, partis, médias, influenceurs), identifiés à partir de sources publiques,
+      vérifiés et modérés par son collectif bénévole avant publication. L'extension la relit en direct : un compte retiré de l'annuaire disparaît aussi d'ici.</p>
+    <div class="credits-liens">
+      <a class="lien-fort" href="https://onbloquelextremedroite.fun/" target="_blank" rel="noopener">Aller sur onbloquelextremedroite.fun ↗</a>
+      <a href="https://x.com/unfachoko" target="_blank" rel="noopener">Suivre @unfachoko sur X ↗</a>
+      <a href="https://fr.tipeee.com/onbloquelextremedroite" target="_blank" rel="noopener">Soutenir l'initiative sur Tipeee ↗</a>
+      <a href="https://onbloquelextremedroite.fun/confidentialite" target="_blank" rel="noopener">Confidentialité de l'annuaire ↗</a>
+    </div>
+    <details class="credits-plus">
+      <summary>Crédits et confidentialité de l'extension</summary>
+      <p><b>Données de l'annuaire</b> (crédits indiqués par le site) : relevés d'abonnés de Le Podium 2027 (données adaptées, CC BY 4.0) et Saper Vedere ;
+        portraits de députés : Assemblée nationale.</p>
+      <p><b>Liens complémentaires</b> (TikTok, Instagram, Facebook absents de l'annuaire) : comptes vérifiés un par un, à partir des données ouvertes de
+        l'Assemblée nationale, de Wikidata et des profils publics.</p>
+      <p><b>Ce que fait l'extension</b> : elle bloque depuis tes propres sessions, comme si tu cliquais toi-même. Aucun mot de passe demandé, aucun compte à créer,
+        aucune donnée envoyée ailleurs : tes choix et ta progression restent dans ton navigateur. Pour savoir si tu es connecté, elle regarde seulement si le
+        cookie de connexion du réseau existe, sans jamais le lire ni l'envoyer.</p>
+      <p>On bloque, on ne harcèle pas : comme l'annuaire, nous rejetons toute violence, toute menace et tout harcèlement.</p>
+    </details>
+  </section>
+
+  <div class="barre-actions" id="barre">
+    <span class="statut" id="statut" role="status" aria-live="polite">Chargement…</span>
+    <button id="arreter" class="danger" hidden>Arrêter</button>
+    <button class="principal" id="lancer" disabled>Lancer le blocage</button>
+  </div>
+</div>
+<dialog id="consulter">
+  <div class="entete-liste">
+    <div class="titre-liste">Les comptes de la liste <button class="fermer" id="fermerListe" aria-label="Fermer">×</button></div>
+    <div class="filtres"><select id="consulterCat" aria-label="Catégorie"></select><input id="consulterRecherche" type="search" placeholder="Rechercher un nom ou un @…" aria-label="Rechercher un compte"></div>
+    <small id="consulterNb"></small>
+  </div>
+  <div id="consulterListe"></div>
+</dialog>
+<script type="module" src="panneau.js"></script>
+</body>
+</html>
