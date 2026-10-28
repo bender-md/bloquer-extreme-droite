@@ -19,6 +19,6 @@ Installation en 5 minutes, pas à pas avec images : voir le [README](https://git
   **[@unfachoko](https://x.com/unfachoko)** ([le soutenir](https://fr.tipeee.com/onbloquelextremedroite)).
   Cette extension est un outil indépendant, non réalisé par l’équipe de l’annuaire.
 - Les réseaux interdisent l’automatisation et peuvent restreindre un compte : garde les réglages prudents et commence par l’essai à blanc.
-- **Uniquement Google Chrome, uniquement sur ordinateur** (pas sur téléphone). Aucun mot de passe demandé, rien n’est envoyé ailleurs.
+- **Uniquement sur ordinateur**, avec Google Chrome ou un navigateur Chromium (Brave, Edge, Opera, Vivaldi, Arc…). Pas sur téléphone, ni Safari, ni Firefox. Aucun mot de passe demandé, rien n’est envoyé ailleurs.
 
 Empreinte SHA-256 du zip : `…`

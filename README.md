@@ -1,13 +1,14 @@
 # Bloquer l’extrême droite sur les réseaux sociaux, automatiquement
 
-**Une extension gratuite pour Google Chrome (sur ordinateur)** qui bloque pour toi, sur **X, TikTok, Instagram et Facebook**,
+**Une extension gratuite pour Google Chrome et les navigateurs Chromium (sur ordinateur)** qui bloque pour toi, sur **X, TikTok, Instagram et Facebook**,
 les comptes d’extrême droite listés par l’annuaire public **[onbloquelextremedroite.fun](https://onbloquelextremedroite.fun)**.
 
 Tu choisis les réseaux, tu cliques sur « Lancer » : l’extension ouvre les profils un par un, lentement, et clique sur « Bloquer » à ta place.
 Plus de fil d’actualité pollué, sans y passer des heures.
 
-> ### 💻 Uniquement sur ordinateur, uniquement avec Google Chrome
+> ### 💻 Uniquement sur ordinateur, avec Google Chrome (ou un navigateur Chromium)
 > L’extension s’installe dans **Google Chrome sur un ordinateur** (Windows, Mac ou Linux).
+> Elle marche aussi dans les autres **navigateurs basés sur Chromium** : Brave, Microsoft Edge, Opera, Vivaldi, Arc…
 > Elle ne marche **pas sur téléphone ni tablette**, et pas dans Safari ni Firefox.
 > Pas de Chrome ? Il est gratuit : [google.com/chrome](https://www.google.com/chrome/).
 > Bonne nouvelle : les comptes bloqués depuis l’ordinateur sont **aussi bloqués dans les applis de ton téléphone**.
@@ -23,7 +24,7 @@ puis suis le <a href="#installation-pas-à-pas-5-minutes">tutoriel d’installat
 
 | | |
 |---|---|
-| **Où ça marche ?** | **Uniquement sur ordinateur** (Windows, Mac ou Linux), **uniquement dans Google Chrome**. Pas sur téléphone ni tablette. Les blocages faits sur l’ordinateur s’appliquent aussi dans les applis du téléphone. |
+| **Où ça marche ?** | **Uniquement sur ordinateur** (Windows, Mac ou Linux), dans **Google Chrome** ou un autre navigateur **Chromium** (Brave, Edge, Opera, Vivaldi, Arc…). Pas sur téléphone ni tablette, ni Safari, ni Firefox. Les blocages faits sur l’ordinateur s’appliquent aussi dans les applis du téléphone. |
 | **C’est payant ?** | Non. Gratuit, sans publicité, sans compte à créer. |
 | **D’où vient la liste ?** | De l’annuaire [onbloquelextremedroite.fun](https://onbloquelextremedroite.fun), tenu par un collectif bénévole qui vérifie chaque compte. La liste se met à jour toute seule. |
 | **C’est sûr ?** | Oui, voir juste en dessous. |
@@ -58,7 +59,8 @@ Détails : [docs/CONFIDENTIALITE.md](docs/CONFIDENTIALITE.md).
 
 Tu n’as besoin de rien connaître à GitHub ni aux extensions. Suis juste les étapes.
 
-Tout se fait **sur ton ordinateur, dans Google Chrome**.
+Tout se fait **sur ton ordinateur, dans Google Chrome**. Le tutoriel montre Chrome ; dans un autre navigateur Chromium, c’est pareil
+(seule l’adresse de l’étape 3 change, voir plus bas).
 
 ### Étape 1 : télécharger
 
@@ -82,6 +84,9 @@ Copie ceci dans la barre d’adresse de Chrome, puis appuie sur Entrée :
 ```
 chrome://extensions
 ```
+
+Autres navigateurs Chromium : Brave `brave://extensions` · Edge `edge://extensions` (le « Mode développeur » y est dans la colonne de gauche) ·
+Opera `opera://extensions` · Vivaldi `vivaldi://extensions`.
 
 ### Étape 4 : installer
 
@@ -184,7 +189,7 @@ Ils ont été supprimés, suspendus ou renommés. Ils sont comptés à part et n
 La liste appartient à l’annuaire : signale-le sur [onbloquelextremedroite.fun](https://onbloquelextremedroite.fun).
 
 **Ça marche sur mon téléphone, ou dans Safari / Firefox ?**
-Non : uniquement Google Chrome, sur ordinateur. Les téléphones n’acceptent pas ce type d’extension.
+Non : uniquement sur ordinateur, avec Google Chrome ou un autre navigateur Chromium (Brave, Edge, Opera, Vivaldi, Arc…). Les téléphones n’acceptent pas ce type d’extension.
 Mais tout ce que tu bloques depuis l’ordinateur reste bloqué dans les applis de ton téléphone.
 
 **Pourquoi pas sur le Chrome Web Store ?**
