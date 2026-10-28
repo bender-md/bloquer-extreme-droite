@@ -1,5 +1,9 @@
 # Historique des versions
 
+## 2.13
+
+- **Partager** : le message renvoie vers l’extension (cette page GitHub) et vers l’annuaire ; bouton Bluesky retiré.
+
 ## 2.12
 
 - **Classement automatique** : les nouveaux comptes de l’annuaire sont rangés dans la bonne catégorie (ou leur pays) toutes les 10 minutes,

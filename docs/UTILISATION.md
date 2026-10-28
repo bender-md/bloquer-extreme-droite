@@ -110,5 +110,5 @@ Chaque ligne : heure, réseau, nom, lien du profil, résultat, et en dessous le 
 
 ## 9. Partager
 
-La carte « Fais passer le mot » propose X, Bluesky, Facebook, WhatsApp, Telegram, Threads et « Copier le message ».
-Le message contient ton nombre de comptes bloqués et le lien de l’annuaire. Rien n’est publié sans que tu valides sur le réseau.
+La carte « Fais passer le mot » propose X, Facebook, WhatsApp, Telegram, Threads et « Copier le message ».
+Le message contient ton nombre de comptes bloqués, le lien de l’extension (cette page GitHub) et celui de l’annuaire. Rien n’est publié sans que tu valides sur le réseau.

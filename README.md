@@ -146,7 +146,7 @@ et continue à utiliser ton ordinateur normalement.
 - **Elle ne rouvre pas les comptes déjà bloqués** : elle lit ta liste de bloqués (X et TikTok) et retient ce qu’elle a fait.
 - **Comptes retirés de l’annuaire** : si un compte qu’elle a bloqué pour toi est retiré de la liste, il apparaît dans « Plus dans la liste »,
   avec un bouton **« Débloquer »** (automatique sur X, TikTok et Instagram) ou **« Garder bloqué »**.
-- **Partager** : des boutons X, Bluesky, Facebook, WhatsApp, Telegram et Threads pour faire connaître l’annuaire.
+- **Partager** : des boutons X, Facebook, WhatsApp, Telegram et Threads pour faire connaître l’extension et l’annuaire.
   Rien n’est publié sans que tu valides.
 
 ---
