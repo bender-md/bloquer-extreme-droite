@@ -65,19 +65,25 @@ Tout se fait **sur ton ordinateur, dans Google Chrome**. Le tutoriel montre Chro
 
 ### Étape 1 : télécharger
 
-Clique ici : **[⬇️ bloquer-extreme-droite.zip](https://github.com/bender-md/bloquer-extreme-droite/releases/latest/download/bloquer-extreme-droite.zip)**.
-Le fichier arrive dans ton dossier **Téléchargements**.
+Clique ici : **[⬇️ Télécharger l’extension](https://github.com/bender-md/bloquer-extreme-droite/releases/latest/download/bloquer-extreme-droite.zip)**.
+Un fichier `.zip` arrive dans ton dossier **Téléchargements**.
 
-> Tu as plutôt cliqué sur le bouton vert **« Code » → « Download ZIP »** ? Ça marche aussi : à l’étape 4, choisis simplement
-> le dossier **`bloquer-extreme-droite-main`** (celui qui contient `manifest.json`).
+> (Si tu as plutôt utilisé le bouton vert **« Code » → « Download ZIP »**, ça marche aussi : suis les mêmes étapes.)
 
-### Étape 2 : décompresser
+### Étape 2 : décompresser et trouver le bon dossier
 
-- **Sur Mac** : double-clique sur le fichier `bloquer-extreme-droite.zip`.
-- **Sur Windows** : clic droit sur le fichier → **« Extraire tout… »** → **« Extraire »**.
+1. **Décompresse le fichier .zip** :
+   - **Mac** : double-clique dessus.
+   - **Windows** : clic droit dessus → **« Extraire tout… »** → **« Extraire »**.
+2. **Trouve le bon dossier.** Ouvre le dossier qui vient d’apparaître (il s’appelle `bloquer-extreme-droite`
+   ou `bloquer-extreme-droite-main`, selon le bouton utilisé) :
+   - ✅ Tu vois des fichiers comme **`manifest.json`**, `panneau.html`, `annuaire.js` et un dossier `icones` ? **C’est le bon dossier.**
+   - ↪️ Tu vois **un seul dossier** à l’intérieur ? (Windows le fait souvent.) **Entre dedans** : c’est lui, le bon dossier.
 
-Tu obtiens un **dossier** `bloquer-extreme-droite`. Range-le dans un endroit où il restera, par exemple dans **Documents**.
-⚠️ **Ne le supprime pas** après l’installation : Chrome en a besoin. Si tu le supprimes, l’extension disparaît.
+   **La règle : le bon dossier est celui qui contient directement le fichier `manifest.json`.**
+   Si Chrome affiche « Fichier manifeste absent ou illisible », c’est que tu as choisi le dossier au-dessus.
+3. **Range ce dossier** dans un endroit où il restera, par exemple dans **Documents**.
+   ⚠️ **Ne le supprime pas** après l’installation : Chrome en a besoin. Si tu le supprimes, l’extension disparaît.
 
 ### Étape 3 : ouvrir la page des extensions de Chrome
 
@@ -96,8 +102,7 @@ Opera `opera://extensions` · Vivaldi `vivaldi://extensions`.
 
 1. **Active le « Mode développeur »** : l’interrupteur en haut à droite.
 2. **Clique sur « Charger l’extension non empaquetée »** (en anglais : *Load unpacked*), qui vient d’apparaître en haut à gauche.
-   Choisis le dossier **`bloquer-extreme-droite`** de l’étape 2 (ou `bloquer-extreme-droite-main`), puis **« Sélectionner »**.
-   Il faut choisir le dossier qui contient le fichier `manifest.json`.
+   Choisis **le bon dossier de l’étape 2** (celui qui contient `manifest.json`), puis clique sur **« Sélectionner »**.
 3. **L’extension apparaît** dans la liste : « On bloque l’extrême droite. Automatiquement ». C’est installé !
 
 ### Étape 5 : épingler l’icône
@@ -178,6 +183,10 @@ L’extension met ce réseau de côté et laisse sa fenêtre ouverte. Fais la v�
 **Mon compte a été limité.**
 Suis les instructions du réseau (souvent un code par e-mail ou SMS), puis attends au moins 24 h avant de relancer, avec un petit maximum
 (5 à 10, dans « Réglages »). L’extension ne connaît pas ton mot de passe et ne peut rien faire à ta place.
+
+**Chrome affiche « Échec du chargement de l’extension · Fichier manifeste absent ou illisible ».**
+Tu as choisi le mauvais dossier : celui au-dessus du bon. Ouvre-le : à l’intérieur, il y a un autre dossier. Recommence
+« Charger l’extension non empaquetée » en choisissant ce dossier intérieur (celui qui contient `manifest.json`).
 
 **Le panneau dit « Pas connecté » alors que je le suis.**
 Tu dois être connecté **dans ce même Chrome** (et pas en navigation privée). Clique sur « Se connecter », connecte-toi,
