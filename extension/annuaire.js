@@ -6,6 +6,9 @@ import { pause, chargerOnglet } from './onglets.js';
 const ANNUAIRE = 'https://onbloquelextremedroite.fun';
 // Catégories de l'annuaire reprises telles quelles ; les autres comptes passent par notre classement (complements.categories).
 const CAT_ANNUAIRE = { RN: 'Rassemblement national', 'Reconquête': 'Reconquête' };
+// Notre classement à jour : les nouveaux comptes de l'annuaire y sont classés automatiquement (toutes les 10 minutes).
+// Fichier public du dépôt ; s'il est injoignable, on garde le classement livré avec l'extension (complements.json).
+const CATEGORIES_EN_LIGNE = 'https://raw.githubusercontent.com/bender-md/bloquer-extreme-droite/main/donnees/categories.json';
 
 async function recuperer(chemin) {
   const r = await fetch(ANNUAIRE + chemin, { cache: 'no-store', credentials: 'include' });
@@ -66,6 +69,9 @@ const cleNom = (n) => nomCle(n) && 'n:' + nomCle(n);
 export async function chargerListe() {
   // Nos liens vérifiés, livrés avec l'extension.
   const complements = await (await fetch(chrome.runtime.getURL('complements.json'))).json();
+  const enLigne = await fetch(CATEGORIES_EN_LIGNE, { cache: 'no-store', credentials: 'omit' })
+    .then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
+  const categories = { ...complements.categories, ...enLigne };
   // Sans l'API on s'arrête, comme le site : les retraits y sont, la liste de base seule pourrait bloquer un compte retiré.
   const brut = await lireAnnuaire();
   const base = extraire(brut.accounts, '[', ']');
@@ -129,11 +135,12 @@ export async function chargerListe() {
     if (Object.keys(p.comptes).length) personnes.push(p);
   }
 
-  // Catégories : classement fait par nous (complements.categories), à partir du compte X, du nom ou du TikTok.
+  // Catégories : classement fait par nous (en ligne, sinon complements.categories), à partir du compte X, du nom, du TikTok, de l'Instagram ou du Facebook.
   // Les comptes ajoutés à l'annuaire depuis ce classement gardent RN / Reconquête, sinon « Nouveaux ajouts (à classer) ».
   for (const p of personnes) {
-    const cles = [cleX(p.comptes.x), 'n:' + nomCle(p.nom), cleTikTok(p.comptes.tiktok)];
-    const c = cles.map((k) => k && complements.categories?.[k]).find(Boolean);
+    const cles = [cleX(p.comptes.x), nomCle(p.nom) && 'n:' + nomCle(p.nom), cleTikTok(p.comptes.tiktok),
+      p.comptes.instagram && 'ig:' + p.comptes.instagram.toLowerCase(), p.comptes.facebook && 'fb:' + p.comptes.facebook.toLowerCase()];
+    const c = cles.map((k) => k && categories[k]).find(Boolean);
     p.categorie = c || CAT_ANNUAIRE[p.categorie] || 'Nouveaux ajouts (à classer)';
   }
 

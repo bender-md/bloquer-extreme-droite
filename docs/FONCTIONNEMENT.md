@@ -27,8 +27,11 @@ Extension Chrome **Manifest V3**, sans dépendance, sans étape de compilation :
 5. `complements.json > liens` ajoute ou corrige des liens TikTok / Instagram / Facebook pour des personnes **déjà présentes dans l’annuaire**
    (sources : données ouvertes de l’Assemblée nationale, Wikidata, profils publics, vérifiés un par un).
    Les champs `extras` (vide) et `recherche_faite` ne sont plus utilisés.
-6. `complements.json > categories` range chaque personne (clés `x:<compte>`, `n:<nom normalisé>`, `tt:<compte TikTok>`) ;
-   l’international porte le pays (« International · Allemagne »). Une personne non classée va dans « Nouveaux ajouts (à classer) ».
+6. Le classement par catégorie vient de [`donnees/categories.json`](../donnees/categories.json), relu en ligne à chaque chargement
+   (à défaut, la copie livrée dans `complements.json > categories`). Clés : `x:<compte>`, `n:<nom normalisé>`, `tt:<compte TikTok>`,
+   `ig:<compte Instagram>`, `fb:<compte Facebook>` ; l’international porte le pays (« International · Allemagne »).
+   Les nouveaux comptes de l’annuaire y sont ajoutés automatiquement (vérification toutes les 10 minutes, classement par un modèle d’IA
+   limité à la liste des catégories). Une personne pas encore classée va dans « Nouveaux ajouts (à classer) ».
 
 ## Déroulé d’un lancement (`panneau.js`)
 

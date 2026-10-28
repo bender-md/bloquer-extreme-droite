@@ -1,5 +1,10 @@
 # Historique des versions
 
+## 2.12
+
+- **Classement automatique** : les nouveaux comptes de l’annuaire sont rangés dans la bonne catégorie (ou leur pays) toutes les 10 minutes,
+  et l’extension relit ce classement à chaque ouverture. Plus besoin de réinstaller pour avoir les catégories à jour.
+
 ## 2.11
 
 - **Suivi en direct** : une carte « Phase de blocage en cours » montre le profil en cours, l’avancement de chaque réseau

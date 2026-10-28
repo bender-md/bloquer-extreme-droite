@@ -38,6 +38,7 @@ puis suis le <a href="#installation-pas-à-pas-5-minutes">tutoriel d’installat
 - **Aucun mot de passe demandé.** Tu te connectes toi-même à tes réseaux, comme d’habitude. L’extension utilise simplement ta session ouverte, comme si tu cliquais toi-même.
 - **Rien n’est envoyé nulle part.** L’extension ne parle qu’à l’annuaire (pour lire la liste) et aux réseaux eux-mêmes (pour bloquer). Pas de serveur à nous, pas de statistiques, pas de publicité.
 - **Elle n’a accès qu’à 5 sites** : x.com, tiktok.com, instagram.com, facebook.com et onbloquelextremedroite.fun. Elle ne voit pas le reste de ta navigation.
+  Elle lit aussi le classement des comptes publié sur cette page GitHub (un simple fichier, sans rien envoyer).
 - **Ta progression reste dans ton navigateur.**
 - **Le code est public** : tout est lisible dans le dossier [`extension/`](extension), n’importe qui peut le vérifier.
 - **Elle ne fait que bloquer** : elle n’écrit à personne, ne signale personne, ne publie rien.
@@ -140,6 +141,7 @@ et continue à utiliser ton ordinateur normalement.
 ## Ce qu’elle fait aussi
 
 - **La liste se met à jour toute seule**, relue sur l’annuaire à chaque ouverture puis toutes les 10 minutes.
+  Les nouveaux comptes de l’annuaire sont **rangés automatiquement dans la bonne catégorie** (vérification toutes les 10 minutes).
   Un badge « +N » sur l’icône signale les nouveaux comptes.
 - **Elle ne rouvre pas les comptes déjà bloqués** : elle lit ta liste de bloqués (X et TikTok) et retient ce qu’elle a fait.
 - **Comptes retirés de l’annuaire** : si un compte qu’elle a bloqué pour toi est retiré de la liste, il apparaît dans « Plus dans la liste »,
