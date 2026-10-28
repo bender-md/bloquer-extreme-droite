@@ -2,10 +2,10 @@
 
 ## Télécharger
 
-👉 **[bloquer-extreme-droite.zip](../../releases/latest/download/bloquer-extreme-droite.zip)** (aussi dans « Assets » ci-dessous).
+👉 **[bloquer-extreme-droite.zip](https://github.com/bender-md/bloquer-extreme-droite/releases/latest/download/bloquer-extreme-droite.zip)** (aussi dans « Assets » ci-dessous).
 Ne prends pas « Source code ».
 
-Installation en 5 minutes, pas à pas avec images : voir le [README](../../#installation-pas-à-pas-5-minutes)
+Installation en 5 minutes, pas à pas avec images : voir le [README](https://github.com/bender-md/bloquer-extreme-droite#installation-pas-à-pas-5-minutes)
 (décompresser → `chrome://extensions` → mode développeur → « Charger l’extension non empaquetée »).
 **Déjà installée ?** Remplace ton dossier `bloquer-extreme-droite` par le nouveau, puis clique sur ↻ dans `chrome://extensions`. Ta progression est gardée.
 

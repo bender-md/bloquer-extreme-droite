@@ -12,7 +12,7 @@ Plus de fil d’actualité pollué, sans y passer des heures.
 > Pas de Chrome ? Il est gratuit : [google.com/chrome](https://www.google.com/chrome/).
 > Bonne nouvelle : les comptes bloqués depuis l’ordinateur sont **aussi bloqués dans les applis de ton téléphone**.
 
-<p align="center"><b>👉 <a href="../../releases/latest/download/bloquer-extreme-droite.zip">Télécharger l’extension</a></b> (fichier .zip, gratuit)<br>
+<p align="center"><b>👉 <a href="https://github.com/bender-md/bloquer-extreme-droite/releases/latest/download/bloquer-extreme-droite.zip">Télécharger l’extension</a></b> (fichier .zip, gratuit)<br>
 puis suis le <a href="#installation-pas-à-pas-5-minutes">tutoriel d’installation</a> ci-dessous.</p>
 
 ![Le panneau de l’extension](docs/captures/tuto-2-panneau.png)
@@ -62,7 +62,7 @@ Tout se fait **sur ton ordinateur, dans Google Chrome**.
 
 ### Étape 1 : télécharger
 
-Clique ici : **[⬇️ bloquer-extreme-droite.zip](../../releases/latest/download/bloquer-extreme-droite.zip)**.
+Clique ici : **[⬇️ bloquer-extreme-droite.zip](https://github.com/bender-md/bloquer-extreme-droite/releases/latest/download/bloquer-extreme-droite.zip)**.
 Le fichier arrive dans ton dossier **Téléchargements**.
 
 > Sur la page « Releases » de GitHub, ne prends **pas** « Source code (zip) » : ce n’est pas le bon fichier.
@@ -148,7 +148,7 @@ et continue à utiliser ton ordinateur normalement.
 
 La **liste** se met à jour toute seule. Pour une **nouvelle version de l’extension** :
 
-1. Télécharge à nouveau **[bloquer-extreme-droite.zip](../../releases/latest/download/bloquer-extreme-droite.zip)** et décompresse-le.
+1. Télécharge à nouveau **[bloquer-extreme-droite.zip](https://github.com/bender-md/bloquer-extreme-droite/releases/latest/download/bloquer-extreme-droite.zip)** et décompresse-le.
 2. Remplace ton ancien dossier `bloquer-extreme-droite` par le nouveau (au même endroit).
 3. Dans `chrome://extensions`, clique sur la flèche **↻** de l’extension.
 
