@@ -6,8 +6,8 @@ En bref : **l’extension ne collecte rien et n’envoie rien à personne.** Il 
 
 | Destination | Pourquoi |
 |---|---|
-| `onbloquelextremedroite.fun` | Lire la liste publique de l’annuaire (`/accounts.js`, `/socials.js`, `/api/accounts`, `/followers.js`). Aucune donnée te concernant n’est envoyée. |
-| `raw.githubusercontent.com` | Lire le classement à jour des comptes par catégorie (`donnees/categories.json` de ce dépôt), sans cookie. Aucune donnée te concernant n’est envoyée. |
+| `raw.githubusercontent.com` | Lire la liste de l’annuaire (copie `donnees/annuaire.json` de ce dépôt, mise à jour toutes les 10 minutes) et le classement par catégorie (`donnees/categories.json`), sans cookie. Aucune donnée te concernant n’est envoyée. |
+| `onbloquelextremedroite.fun` | Seulement en secours, si la copie est injoignable : lire la liste publique directement sur le site de l’annuaire. |
 | `x.com`, `tiktok.com`, `instagram.com`, `facebook.com` | Ouvrir les profils et cliquer sur « Bloquer », lire ta liste de comptes bloqués. Exactement ce que tu ferais toi-même, avec ta propre session. |
 
 Aucun autre site n’est contacté : pas de statistiques, pas de publicité. Les boutons de partage ouvrent le réseau choisi seulement quand tu cliques dessus.

@@ -1,5 +1,12 @@
 # Historique des versions
 
+## 2.17
+
+- **La liste est lue sur une copie publiée dans ce dépôt** ([`donnees/annuaire.json`](../donnees/annuaire.json)), mise à jour toutes
+  les 10 minutes à partir du site de l’annuaire (ajouts et retraits compris). Depuis le 28/10, le site de l’annuaire ne laisse plus
+  d’autres outils lire sa liste ; la copie évite aussi que chaque utilisateur interroge son serveur. Si la copie est injoignable,
+  l’extension essaie le site lui-même.
+
 ## 2.16
 
 - **« à bloquer » plus clair** : chaque catégorie compte maintenant les comptes pas encore bloqués (une personne = 1, même présente sur

@@ -1,6 +1,6 @@
 // Ouvre le panneau au clic ; vérifie l'annuaire toutes les 30 minutes et affiche « +N » sur l'icône
 // quand de nouveaux comptes y ont été ajoutés depuis la dernière ouverture du panneau.
-const ANNUAIRE = 'https://onbloquelextremedroite.fun';
+const COPIE_ANNUAIRE = 'https://raw.githubusercontent.com/bender-md/bloquer-extreme-droite/main/donnees/annuaire.json';
 
 chrome.action.onClicked.addListener(() => {
   chrome.tabs.create({ url: chrome.runtime.getURL('panneau.html') });
@@ -14,8 +14,9 @@ chrome.runtime.onStartup.addListener(programmer);
 chrome.alarms.onAlarm.addListener(async (a) => {
   if (a.name !== 'annuaire') return;
   try {
-    const r = await fetch(ANNUAIRE + '/api/accounts', { cache: 'no-store', credentials: 'include' });
-    if (!r.ok) return; // protection anti-robot : on réessaiera, le panneau sait la contourner
+    // Copie de la liste sur notre dépôt (voir annuaire.js) : le site de l'annuaire ne laisse plus d'autres outils la lire.
+    const r = await fetch(COPIE_ANNUAIRE, { cache: 'no-store', credentials: 'omit' });
+    if (!r.ok) return; // on réessaiera à la prochaine alarme
     // Même compte que chargerListe() (entreesAnnuaire), enregistré par le panneau dans vuAnnuaire.
     const n = (await r.json()).entries.filter((e) => e.type === 'new').length;
     const { vuAnnuaire } = await chrome.storage.local.get('vuAnnuaire');

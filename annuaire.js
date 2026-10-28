@@ -16,9 +16,29 @@ async function recuperer(chemin) {
   return r;
 }
 
-// Lecture directe ; si la protection anti-robot du site la refuse, on ouvre le site dans un onglet caché
-// et on lit les mêmes fichiers depuis la page (comme le ferait le site lui-même).
+// Copie de la liste publiée sur notre dépôt GitHub : un serveur visite l'annuaire toutes les 10 minutes, comme un visiteur,
+// et la publie ici. Depuis le 28/10, le site de l'annuaire ne laisse plus d'autres outils lire sa liste ; la copie évite aussi
+// que chaque utilisateur interroge son serveur. Format : { accounts, socials, entries, followers }.
+const COPIE_ANNUAIRE = 'https://raw.githubusercontent.com/bender-md/bloquer-extreme-droite/main/donnees/annuaire.json';
 async function lireAnnuaire() {
+  try {
+    const r = await fetch(COPIE_ANNUAIRE, { cache: 'no-store', credentials: 'omit' });
+    if (r.ok) {
+      const d = await r.json();
+      if (Array.isArray(d.accounts) && d.accounts.length && Array.isArray(d.entries) && d.entries.length) {
+        return { base: d.accounts, socials: d.socials || {}, entries: d.entries, abonnes: d.followers || {} };
+      }
+    }
+  } catch (e) { /* copie injoignable : on essaie le site lui-même */ }
+  const brut = await lireSite();
+  let abonnes = {};
+  try { abonnes = extraire(brut.followers, '{', '}'); } catch (e) { /* pas de relevé : on gardera seulement « France d'abord » */ }
+  return { base: extraire(brut.accounts, '[', ']'), socials: extraire(brut.socials, '{', '}'), entries: brut.api.entries, abonnes };
+}
+
+// Secours : lecture directe sur le site ; si la protection anti-robot la refuse, on ouvre le site dans un onglet caché
+// et on lit les mêmes fichiers depuis la page.
+async function lireSite() {
   try {
     return {
       accounts: await (await recuperer('/accounts.js')).text(),
@@ -72,13 +92,8 @@ export async function chargerListe() {
   const enLigne = await fetch(CATEGORIES_EN_LIGNE, { cache: 'no-store', credentials: 'omit' })
     .then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
   const categories = { ...complements.categories, ...enLigne };
-  // Sans l'API on s'arrête, comme le site : les retraits y sont, la liste de base seule pourrait bloquer un compte retiré.
-  const brut = await lireAnnuaire();
-  const base = extraire(brut.accounts, '[', ']');
-  const socials = extraire(brut.socials, '{', '}');
-  const { entries } = brut.api;
-  let abonnes = {};
-  try { abonnes = extraire(brut.followers, '{', '}'); } catch (e) { /* pas de relevé : on gardera seulement « France d'abord » */ }
+  // Sans les ajouts et retraits on s'arrête, comme le site : la liste de base seule pourrait bloquer un compte retiré.
+  const { base, socials, entries, abonnes } = await lireAnnuaire();
 
   const parId = new Map();
   for (const c of base) parId.set(String(c.id ?? c.handle).toLowerCase(), { id: c.id, nom: c.name, categorie: c.category, raison: c.reason, comptes: { x: c.handle } });
@@ -148,7 +163,8 @@ export async function chargerListe() {
   for (const p of personnes) {
     p.abonnes = {};
     for (const [res, h] of Object.entries(p.comptes)) {
-      const n = abonnes[`${res}:/${res === 'tiktok' ? '@' : ''}${h.toLowerCase()}`]?.count;
+      const v = abonnes[`${res}:/${res === 'tiktok' ? '@' : ''}${h.toLowerCase()}`];
+      const n = typeof v === 'number' ? v : v?.count; // copie : un nombre ; site : { count, date }
       if (n > 0) p.abonnes[res] = n;
     }
     p.audience = Math.max(0, ...Object.values(p.abonnes));
